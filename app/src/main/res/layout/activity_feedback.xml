@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activity_feedback"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/feedback_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#1C86EE"
+        android:layout_alignParentTop="true"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:textColor="#FFFFFF"
+            android:text="反馈建议"
+            android:textSize="20sp" />
+
+    </android.support.v7.widget.Toolbar>
+
+    <TextView
+        android:layout_marginTop="5dp"
+        android:textSize="12sp"
+        android:text="如果您遇到问题或者有建议，欢迎您在这告\n诉我们，您的意见与建议是我们进步的动力"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="17dp"
+        android:layout_marginRight="13dp"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:textSize="22sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="类型"/>
+
+        <Spinner
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/feedback_spinner"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="1"
+            android:entries="@array/feedbackType"/>
+
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/feedback_contentEdit"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp"
+        android:textSize="14sp"
+        android:hint="您遇到了什么问题或是有什么建议，在这具体描述告诉我们(150字以内)"
+        android:maxLength="150"
+        android:gravity="top"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:text="建议您留下您的联系方式(QQ、微信、手机等)，方便我们联系您"
+            android:layout_marginLeft="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"/>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/feedback_contactWayLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/feedback_contactWayEdit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:textSize="16sp"
+                android:hint="联系方式(注明什么方式)"/>
+        </android.support.design.widget.TextInputLayout>
+    </LinearLayout>
+
+
+
+    <com.andexert.library.RippleView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        app:rv_color="#FFFFFF"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginRight="13dp">
+
+        <Button
+            android:id="@+id/feedback_submitButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="提   交"
+            android:background="#1C86EE"
+            android:textColor="#FFFFFF"/>
+
+    </com.andexert.library.RippleView>
+
+</LinearLayout>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="targetCycle">
+        <item>短期目标(7天)</item>
+        <item>中期目标(21天)</item>
+        <item>长期目标(90天)</item>
+    </string-array>
+
+    <string-array name="feedbackType">
+        <item>bug反馈</item>
+        <item>建议</item>
+        <item>其他</item>
+    </string-array>
+</resources>

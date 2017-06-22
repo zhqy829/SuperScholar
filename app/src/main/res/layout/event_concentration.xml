@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.shinelw.library.ColorArcProgressBar
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal"
+            android:id="@+id/event_concentration_progressBar"
+            app:is_need_content="true"
+            app:max_value="120"
+            app:back_width="10dp"
+            app:front_width="10dp"
+            app:total_engle="270"
+            app:is_need_title="true"
+            app:string_title="专心时间"
+            app:is_need_unit="true"
+            app:string_unit="分钟"
+            app:front_color1="#96CDCD"
+            app:front_color2="#66CDAA"
+            app:front_color3="#1C86EE" />
+
+        <RelativeLayout
+            android:id="@+id/event_concentration_buttonLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.andexert.library.RippleView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:rv_color="#FFFFFF">
+
+                <ImageButton
+                    android:id="@+id/event_concentration_startButton"
+                    android:background="#FFFFFF"
+                    android:src="@drawable/event_concentration_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="50dp"
+                    android:layout_alignParentLeft="true"/>
+
+                <ImageButton
+                    android:id="@+id/event_concentration_stopButton"
+                    android:background="#FFFFFF"
+                    android:src="@drawable/event_concentration_stop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="50dp"/>
+
+            </com.andexert.library.RippleView>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/event_concentration_errorText"
+            android:text="软件进入了后台，计时停止"
+            android:textColor="#FF0000"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"/>
+
+        <TextView
+            android:id="@+id/event_concentration_hintText"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/concentration_hint"/>
+
+        <TextView
+            android:id="@+id/event_concentration_ruleText"
+            android:layout_marginTop="2dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginRight="8dp"
+            android:textColor="#1C86EE"
+            android:text="@string/oncentration_rule"/>
+
+    </LinearLayout>
+
+</ScrollView>

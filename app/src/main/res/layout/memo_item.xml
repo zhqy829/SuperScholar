@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/memo_item_cardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    app:cardCornerRadius="4dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <TextView
+            android:id="@+id/memo_item_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:gravity="center_horizontal"
+            android:textColor="#4F4F4F" />
+
+        <TextView
+            android:layout_marginTop="3dp"
+            android:id="@+id/memo_item_content"
+            android:layout_width="match_parent"
+            android:layout_height="90dp"
+            android:textColor="#838B8B" />
+
+        <TextView
+            android:layout_marginTop="3dp"
+            android:id="@+id/memo_item_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:textColor="#838B8B"
+            android:textSize="10sp"/>
+
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

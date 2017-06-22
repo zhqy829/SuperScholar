@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:id="@+id/activity_memo_create"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/memo_create_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#1C86EE"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:textColor="#FFFFFF"
+            android:text="备忘录"
+            android:textSize="20sp" />
+
+    </android.support.v7.widget.Toolbar>
+
+    <EditText
+        android:id="@+id/memo_create_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="标题(最多8个字符)"
+        android:maxLength="8"
+        android:singleLine="true"/>
+
+    <EditText
+        android:id="@+id/memo_create_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:hint="请输入内容"
+        android:inputType="textMultiLine"
+        android:gravity="top"/>
+
+    <com.andexert.library.RippleView
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        app:rv_color="#FFFFFF"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp">
+
+        <Button
+            android:id="@+id/memo_create_confirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="确定"
+            android:background="#1C86EE"
+            android:textColor="#FFFFFF" />
+
+    </com.andexert.library.RippleView>
+
+</LinearLayout>
