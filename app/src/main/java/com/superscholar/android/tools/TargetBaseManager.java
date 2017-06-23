@@ -24,7 +24,7 @@ public class TargetBaseManager {
 
     public class TargetBaseHelper extends SQLiteOpenHelper{
         private static final int VERSION=1;
-        private static final String DATABASE_NAME="SuperScholar.db";
+        private static final String DATABASE_NAME="Target.db";
 
         public TargetBaseHelper(Context context){
             super(context,DATABASE_NAME,null,VERSION);
@@ -33,7 +33,9 @@ public class TargetBaseManager {
         @Override
         public void onCreate(SQLiteDatabase sqLiteDatabase) {
             sqLiteDatabase.execSQL(
-                    "CREATE TABLE targetitem("+
+                    "CREATE TABLE " +
+                            TABLE_NAME+
+                            "("+
                             "_id INTEGER PRIMARY KEY AUTOINCREMENT,"+
                             COL_UUID+" TEXT,"+
                             COL_NAME+" TEXT,"+
@@ -94,11 +96,23 @@ public class TargetBaseManager {
             targetItem.setSignDays(signdays);
             targetItem.setSignDates(signdates);
 
-            //是否失效
+            //是否失效，当前周数
             Date todayDate=new Date(Calendar.getInstance());
             Date endDate=(Date)todayDate.clone();//失效日期，该天已失效
             endDate.dayAdd(lastedWeek*7);
-            if(!endDate.isLate(todayDate)) targetItem.setValid(false);
+            if(!endDate.isLate(todayDate)){
+                targetItem.setValid(false);
+                targetItem.setCurrentWeek(lastedWeek);
+            }else{
+                int currentWeek=1;
+                Date startDate=Date.parseDate(startDateString);
+                startDate.dayAdd(7);
+                while(!startDate.isLate(todayDate)){
+                    currentWeek++;
+                    startDate.dayAdd(7);
+                }
+                targetItem.setCurrentWeek(currentWeek);
+            }
 
             //连续打卡天数
             int consecutiveSignDays=0;

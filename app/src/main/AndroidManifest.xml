@@ -22,17 +22,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".activity.LoginActivity">
-
-        </activity>
-        <activity android:name=".activity.RegisterActivity" />
-        <activity android:name=".activity.MainActivity"
-            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.RegisterActivity" />
+        <activity
+            android:name=".activity.MainActivity"
+            android:launchMode="singleTask"></activity>
         <activity android:name=".activity.ResetPasswordActivity" />
         <activity android:name=".activity.MemoActivity" />
         <activity android:name=".activity.MemoCreateActivity" />
@@ -70,7 +69,8 @@
             android:exported="true" />
 
         <activity android:name=".activity.WebActivity" />
-        <activity android:name=".activity.RobotActivity"></activity>
+        <activity android:name=".activity.RobotActivity" />
+        <activity android:name=".activity.TargetDetailActivity"></activity>
     </application>
 
 </manifest>

@@ -33,27 +33,52 @@
             android:layout_height="wrap_content">
 
             <com.andexert.library.RippleView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:rv_color="#FFFFFF">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="50dp"
+                android:layout_alignParentLeft="true"
+                app:rv_color="#FFFFFF"
+                app:rv_rippleDuration="200">
 
                 <ImageButton
                     android:id="@+id/event_concentration_startButton"
                     android:background="#FFFFFF"
                     android:src="@drawable/event_concentration_start"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="50dp"
-                    android:layout_alignParentLeft="true"/>
+                    android:layout_height="wrap_content" />
+
+            </com.andexert.library.RippleView>
+
+            <com.andexert.library.RippleView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                app:rv_color="#FFFFFF"
+                app:rv_rippleDuration="200">
 
                 <ImageButton
                     android:id="@+id/event_concentration_stopButton"
                     android:background="#FFFFFF"
                     android:src="@drawable/event_concentration_stop"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="50dp"/>
+                    android:layout_height="wrap_content" />
+
+            </com.andexert.library.RippleView>
+
+            <com.andexert.library.RippleView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="50dp"
+                app:rv_color="#FFFFFF"
+                app:rv_rippleDuration="200">
+
+                <ImageButton
+                    android:id="@+id/event_concentration_settingButton"
+                    android:background="#FFFFFF"
+                    android:src="@drawable/event_concentration_setting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
 
             </com.andexert.library.RippleView>
 

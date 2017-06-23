@@ -64,7 +64,7 @@ public class ResetPasswordActivity extends BaseActivity {
                     pd.setMessage("修改密码中，请稍候...");
                     pd.setCancelable(false);
                     pd.show();
-                    ServerConnection.sendResetPasswordMsg(UserLib.getInstance(null).getUser().getUsername(),
+                    ServerConnection.sendResetPasswordMsg(UserLib.getInstance().getUser().getUsername(),
                             op, np, new Callback() {
                                 @Override
                                 public void onFailure(Call call, IOException e) {
@@ -102,7 +102,7 @@ public class ResetPasswordActivity extends BaseActivity {
                                                     Toast.makeText(ResetPasswordActivity.this, "修改成功",
                                                             Toast.LENGTH_SHORT).show();
                                                     modifyUPFile(getIntent().getStringExtra("username"),np);
-                                                    UserLib.getInstance(null).getUser().setPassword(np);
+                                                    UserLib.getInstance().getUser().setPassword(np);
                                                     finish();
 
                                                 }

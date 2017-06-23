@@ -36,7 +36,7 @@ public class FeedbackActivity extends BaseActivity {
         typeSpinner=(Spinner)findViewById(R.id.feedback_spinner);
         detailEdit=(EditText)findViewById(R.id.feedback_contentEdit);
         contactEdit=(EditText)findViewById(R.id.feedback_contactWayEdit);
-        username= UserLib.getInstance(null).getUser().getUsername();
+        username= UserLib.getInstance().getUser().getUsername();
     }
 
     private void initToolbar(){

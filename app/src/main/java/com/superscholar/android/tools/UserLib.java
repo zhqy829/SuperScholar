@@ -15,18 +15,16 @@ public class UserLib {
 
     private User user;
 
-    @Nullable
-    public static UserLib getInstance(@Nullable User user){
-        if(sUserLib==null&&user==null){
-            return null;
-        }else if(sUserLib==null){
-            sUserLib=new UserLib(user);
-        }
-        return sUserLib;
+    static{
+        sUserLib=new UserLib();
     }
 
-    private UserLib(User user){
-        this.user=user;
+    private UserLib(){
+        user=new User();
+    }
+
+    public static UserLib getInstance(){
+        return sUserLib;
     }
 
     public User getUser(){

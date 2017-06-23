@@ -1,5 +1,9 @@
 package com.superscholar.android.tools;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.util.Calendar;
 
 /**
@@ -7,7 +11,7 @@ import java.util.Calendar;
  * 带边界的时间类
  */
 
-public class BoundsTime extends Time {
+public class BoundsTime extends Time implements Serializable,Parcelable {
 
     //上下限时间生成幅度
     private static final int TIME_RANGE=30;
@@ -78,4 +82,30 @@ public class BoundsTime extends Time {
         if(timeMin<=upperTimeMin&&timeMin>=lowerTimeMin) return true;
         return false;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(lowerTime,flags);
+        dest.writeParcelable(upperTime,flags);
+    }
+
+    public static final Parcelable.Creator<BoundsTime> CREATOR =new Parcelable.Creator<BoundsTime>(){
+        @Override
+        public BoundsTime createFromParcel(Parcel source) {
+            BoundsTime boundsTime =new BoundsTime();
+            boundsTime.lowerTime=source.readParcelable(Time.class.getClassLoader());
+            boundsTime.upperTime=source.readParcelable(Time.class.getClassLoader());
+            return boundsTime;
+        }
+
+        @Override
+        public BoundsTime[] newArray(int size) {
+            return new BoundsTime[size];
+        }
+    };
 }

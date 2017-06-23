@@ -436,13 +436,12 @@ public class MainActivity extends BaseActivity {
             String sID = intent.getStringExtra("sID");
             String email = intent.getStringExtra("email");
 
-            user = new User();
+            //实例化单例类
+            user=UserLib.getInstance().getUser();
             user.setUsername(username);
             user.setPassword(password);
             user.setGrade(grade);
             user.setEmail(email);
-            //实例化单例类
-            UserLib.getInstance(user);
 
             this.username.setText("用户名："+username);
             this.email.setText("邮箱："+email);

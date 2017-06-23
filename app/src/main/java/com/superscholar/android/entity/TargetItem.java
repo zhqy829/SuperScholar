@@ -1,5 +1,8 @@
 package com.superscholar.android.entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.superscholar.android.tools.BoundsTime;
 import com.superscholar.android.tools.Date;
 
@@ -13,7 +16,7 @@ import java.util.UUID;
  * Created by Administrator on 2017/3/5.
  */
 
-public class TargetItem implements Serializable{
+public class TargetItem implements Parcelable{
 
     private UUID uuid;//识别码
     private String name;//目标名
@@ -25,6 +28,7 @@ public class TargetItem implements Serializable{
     private Date startDate;//目标开始日期
     private int signDays=0;//打卡总天数
     private int consecutiveSignDays=0;//连续打卡天数
+    private int currentWeek=1;//当前周数
     private boolean isTodaySign=false;//今天是否打卡
     private boolean isYesterdaySign=false;//昨天是否打卡
     private int []weekSignTimes;//持续的周中各周的打卡次数
@@ -140,6 +144,14 @@ public class TargetItem implements Serializable{
         this.consecutiveSignDays = consecutiveSignDays;
     }
 
+    public int getCurrentWeek() {
+        return currentWeek;
+    }
+
+    public void setCurrentWeek(int currentWeek) {
+        this.currentWeek = currentWeek;
+    }
+
     public boolean isTodaySign() {
         return isTodaySign;
     }
@@ -179,4 +191,59 @@ public class TargetItem implements Serializable{
     public void setSignDates(List<Date> signDates) {
         this.signDates = signDates;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeSerializable(uuid);
+        dest.writeString(name);
+        dest.writeInt(timesPerWeek);
+        dest.writeInt(lastedWeek);
+        dest.writeByte((byte) (isCheck ? 1 : 0));
+        dest.writeByte((byte) (needRemind ? 1 : 0));
+        dest.writeParcelable(remindTime,flags);
+        dest.writeParcelable(startDate,flags);
+        dest.writeInt(signDays);
+        dest.writeInt(consecutiveSignDays);
+        dest.writeInt(currentWeek);
+        dest.writeByte((byte) (isTodaySign ? 1 : 0));
+        dest.writeByte((byte) (isYesterdaySign ? 1 : 0));
+        dest.writeIntArray(weekSignTimes);
+        dest.writeByte((byte) (isValid ? 1 : 0));
+        dest.writeSerializable((ArrayList)signDates);
+    }
+
+    public static final Parcelable.Creator<TargetItem> CREATOR =new Parcelable.Creator<TargetItem>(){
+        @Override
+        public TargetItem createFromParcel(Parcel source) {
+            TargetItem targetItem=new TargetItem();
+            targetItem.uuid=(UUID)source.readSerializable();
+            targetItem.name=source.readString();
+            targetItem.timesPerWeek=source.readInt();
+            targetItem.lastedWeek=source.readInt();
+            targetItem.isCheck=source.readByte()!=0;
+            targetItem.needRemind=source.readByte()!=0;
+            targetItem.remindTime=source.readParcelable(BoundsTime.class.getClassLoader());
+            targetItem.startDate=source.readParcelable(Date.class.getClassLoader());
+            targetItem.signDays=source.readInt();
+            targetItem.consecutiveSignDays=source.readInt();
+            targetItem.currentWeek=source.readInt();
+            targetItem.isTodaySign=source.readByte()!=0;
+            targetItem.isYesterdaySign=source.readByte()!=0;
+            targetItem.weekSignTimes=new int[targetItem.getLastedWeek()];
+            source.readIntArray(targetItem.weekSignTimes);
+            targetItem.isValid=source.readByte()!=0;
+            targetItem.signDates=(ArrayList)source.readSerializable();
+            return targetItem;
+        }
+
+        @Override
+        public TargetItem[] newArray(int size) {
+            return new TargetItem[size];
+        }
+    };
 }

@@ -43,9 +43,9 @@ public class MemoAdapter extends RecyclerView.Adapter<MemoAdapter.ViewHolder> {
     public MemoAdapter(List <MemoItem> memoItems){
         this.memoItems=memoItems;
         colors.add("#FFE7BA");
-        colors.add("#fccbcb");
+        colors.add("#FCCBCB");
         colors.add("#BFEFFF");
-        colors.add("#c3fec3");
+        colors.add("#C3FEC3");
     }
 
     @Override

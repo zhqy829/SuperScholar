@@ -1,5 +1,8 @@
 package com.superscholar.android.tools;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.regex.Matcher;
@@ -9,7 +12,7 @@ import java.util.regex.Pattern;
  * Created by zhqy on 2017/6/17.
  */
 
-public class Date implements Serializable,Cloneable{
+public class Date implements Parcelable,Cloneable,Serializable{
 
     private int year;
     private int month;
@@ -196,4 +199,32 @@ public class Date implements Serializable,Cloneable{
         dateStr=String.valueOf(year)+"-"+String.valueOf(month)+"-"+String.valueOf(day);
         return dateStr;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(year);
+        dest.writeInt(month);
+        dest.writeInt(day);
+    }
+
+    public static final Parcelable.Creator<Date> CREATOR =new Parcelable.Creator<Date>(){
+        @Override
+        public Date createFromParcel(Parcel source) {
+            Date date =new Date();
+            date.year=source.readInt();
+            date.month=source.readInt();
+            date.day=source.readInt();
+            return date;
+        }
+
+        @Override
+        public Date[] newArray(int size) {
+            return new Date[size];
+        }
+    };
 }
