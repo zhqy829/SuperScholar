@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.superscholar.android.R;
+import com.superscholar.android.activity.TargetCreateActivity;
 import com.superscholar.android.activity.TargetDetailActivity;
 import com.superscholar.android.adapter.TargetAdapter;
 import com.superscholar.android.control.SlidableFloatingActionButton;
@@ -63,6 +64,7 @@ public class TargetFragment extends Fragment{
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                /*
                 Toast.makeText(getActivity(),"add",Toast.LENGTH_SHORT).show();
                 TargetItem item1=new TargetItem("早起",5,4,true,6,30,new Date(2017,6,18));
                 List<Date>signDates=new ArrayList<Date>();
@@ -80,6 +82,9 @@ public class TargetFragment extends Fragment{
                 manager.insertItem(item1);
                 hintText.setVisibility(View.GONE);
                 recyclerView.setVisibility(View.VISIBLE);
+                */
+                Intent intent=new Intent(getActivity(), TargetCreateActivity.class);
+                startActivity(intent);
             }
         });
     }

@@ -14,6 +14,7 @@ public class User {
     private double grade;
     private String sID;
     private String email;
+    private int currencyAmount;
 
 
     public String getUsername() {
@@ -54,5 +55,13 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public int getCurrencyAmount() {
+        return currencyAmount;
+    }
+
+    public void setCurrencyAmount(int currencyAmount) {
+        this.currencyAmount = currencyAmount;
     }
 }

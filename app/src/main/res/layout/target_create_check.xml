@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="10dp">
+
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            app:cardElevation="5dp"
+            app:cardCornerRadius="4dp">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingBottom="10dp">
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="13dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="10dp">
+
+                    <TextView
+                        android:textSize="22sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="目标"/>
+
+                    <Spinner
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/target_create_check_targetSpinner"
+                        android:layout_marginLeft="15dp"
+                        android:layout_weight="1"
+                        android:entries="@array/checkTargetType"/>
+
+                    <ImageView
+                        android:layout_marginLeft="20dp"
+                        android:layout_width="20dp"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginLeft="13dp"
+                        android:layout_marginTop="10dp">
+
+                        <TextView
+                            android:textSize="18sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="持续"/>
+
+                        <EditText
+                            android:inputType="number"
+                            android:textSize="18sp"
+                            android:maxLength="2"
+                            android:layout_width="50dp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/target_create_check_weekEdit"
+                            android:layout_marginLeft="15dp" />
+
+                        <TextView
+                            android:layout_marginLeft="10dp"
+                            android:textSize="18sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="周"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginTop="10dp">
+
+                        <TextView
+                            android:textSize="18sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="每周"/>
+
+                        <EditText
+                            android:inputType="number"
+                            android:textSize="18sp"
+                            android:maxLength="1"
+                            android:layout_width="50dp"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/target_create_check_timesEdit"
+                            android:layout_marginLeft="15dp" />
+
+                        <TextView
+                            android:layout_marginLeft="10dp"
+                            android:textSize="18sp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="次"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_marginTop="15dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginLeft="13dp">
+
+                    <TextView
+                        android:textSize="22sp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="打卡时间"/>
+
+                    <TimePicker
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/target_create_check_timePicker"
+                        android:timePickerMode="spinner" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="13dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="10dp">
+
+                    <TextView
+                        android:textSize="22sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="每次打卡获得"/>
+
+                    <EditText
+                        android:inputType="number"
+                        android:textSize="22sp"
+                        android:maxLength="6"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:id="@+id/target_create_check_currencyEdit"
+                        android:layout_marginLeft="15dp" />
+
+                    <TextView
+                        android:layout_marginLeft="10dp"
+                        android:textSize="22sp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="奖励币"/>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/target_create_check_hintText"
+                    android:gravity="center_horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textSize="14sp"
+                    android:text="该目标达成后您将获得50学分绩"/>
+
+                <com.andexert.library.RippleView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    app:rv_color="#FFFFFF"
+                    android:layout_marginTop="15dp"
+                    android:layout_marginLeft="13dp"
+                    android:layout_marginRight="13dp">
+
+                    <Button
+                        android:id="@+id/target_create_check_createButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="创   建"
+                        android:background="#1C86EE"
+                        android:textColor="#FFFFFF" />
+
+                </com.andexert.library.RippleView>
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+    </ScrollView>
+
+</LinearLayout>

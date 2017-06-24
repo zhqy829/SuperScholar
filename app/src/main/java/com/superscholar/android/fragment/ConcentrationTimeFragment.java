@@ -1,13 +1,16 @@
 package com.superscholar.android.fragment;
 
+import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +23,7 @@ import com.superscholar.android.R;
 import com.superscholar.android.control.BaseActivity;
 import com.superscholar.android.service.ConcentrationService;
 import com.superscholar.android.activity.ConcentrationRuleActivity;
+import com.superscholar.android.tools.EncryptionDevice;
 
 import static android.content.Context.BIND_AUTO_CREATE;
 
@@ -28,6 +32,8 @@ import static android.content.Context.BIND_AUTO_CREATE;
  */
 
 public class ConcentrationTimeFragment extends Fragment{
+
+    private int currencyBase=0;//获得货币的基数
     private boolean isTimeStart=false;  //专心时间计时开始
     private TextView errorText;  //提示文字 进入后台或满120分钟时显示
     private int concentrationMin=0;  //专心分钟
@@ -48,6 +54,8 @@ public class ConcentrationTimeFragment extends Fragment{
                         BaseActivity.stopEnterBackgroundListening();
                         errorText.setTextColor(Color.parseColor("#1C86EE"));
                         errorText.setText("本次专心时间已满120分钟，计时结束，获得"+String.valueOf(70)+"学分绩");
+                        // TODO: 2017/6/24
+                        //学分绩变化
                         errorText.setVisibility(View.VISIBLE);
                     }
                 }
@@ -64,15 +72,20 @@ public class ConcentrationTimeFragment extends Fragment{
         errorText=(TextView)view.findViewById(R.id.event_concentration_errorText);
         progressBar=(ColorArcProgressBar)view.findViewById(R.id.event_concentration_progressBar);
     }
-    
+
     private void initButton(View view){
         ImageButton startButton=(ImageButton)view.findViewById(R.id.event_concentration_startButton);
         ImageButton stopButton=(ImageButton)view.findViewById(R.id.event_concentration_stopButton);
+        ImageButton settingButton=(ImageButton)view.findViewById(R.id.event_concentration_settingButton);
         TextView ruleDetailText=(TextView)view.findViewById(R.id.event_concentration_ruleText);
 
         startButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(currencyBase==0){
+                    Toast.makeText(getActivity(),"请先设置获得奖励币的基数",Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 if(isTimeStart){
                     Toast.makeText(getActivity(),"计时已经开始啦",Toast.LENGTH_SHORT).show();
                     return;
@@ -119,6 +132,23 @@ public class ConcentrationTimeFragment extends Fragment{
             }
         });
 
+        settingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isTimeStart){
+                    Toast.makeText(getActivity(),"请先停止计时后再设置哦",Toast.LENGTH_SHORT).show();
+                }else{
+                    Bundle args=new Bundle();
+                    args.putInt("currencyBase",currencyBase);
+                    FragmentManager manager=getFragmentManager();
+                    ConcentrationSettingDialogFragment dialog=new ConcentrationSettingDialogFragment();
+                    dialog.setArguments(args);
+                    dialog.setTargetFragment(ConcentrationTimeFragment.this,0);
+                    dialog.show(manager,"ConcentrationSettingDialog");
+                }
+            }
+        });
+
         ruleDetailText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -150,12 +180,36 @@ public class ConcentrationTimeFragment extends Fragment{
         getActivity().bindService(bindIntent,serviceConnection,BIND_AUTO_CREATE);
     }
 
+    //从文件初始化奖励币基数
+    private void initCurrencyBase(){
+        SharedPreferences pref=getActivity().getSharedPreferences("data_currency",0);
+        currencyBase=pref.getInt("currencyBase",0);
+    }
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.event_concentration,container,false);
         initControl(view);
         initButton(view);
         initConcentrationTime();
+        initCurrencyBase();
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode){
+            case 0:
+                if(resultCode== Activity.RESULT_OK){
+                    currencyBase=data.getIntExtra("currencyBase",0);
+                    SharedPreferences.Editor editor=getActivity().getSharedPreferences("data_currency",0).edit();
+                    editor.putInt("currencyBase",currencyBase);
+                    editor.apply();
+                    Toast.makeText(getActivity(),"设置成功",Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+                break;
+        }
     }
 
     @Override

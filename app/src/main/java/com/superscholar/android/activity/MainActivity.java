@@ -1,6 +1,7 @@
 package com.superscholar.android.activity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -66,8 +67,7 @@ import static com.superscholar.android.tools.ServerConnection.sendBindSIDMsg;
 
 public class MainActivity extends BaseActivity {
 
-    //用户信息类，登录成功后先构造用户信息类，在通过该类实例化单例类
-    private User user;
+    private User user;//用户信息类
 
     private DrawerLayout mDrawerLayout; //活动主布局
     private TextView toolbarText;  //菜单栏TextView
@@ -436,12 +436,16 @@ public class MainActivity extends BaseActivity {
             String sID = intent.getStringExtra("sID");
             String email = intent.getStringExtra("email");
 
+            SharedPreferences pref=getSharedPreferences("data_currency",0);
+            int currencyAmount=pref.getInt("currencyAmount",0);
+
             //实例化单例类
             user=UserLib.getInstance().getUser();
             user.setUsername(username);
             user.setPassword(password);
             user.setGrade(grade);
             user.setEmail(email);
+            user.setCurrencyAmount(currencyAmount);
 
             this.username.setText("用户名："+username);
             this.email.setText("邮箱："+email);

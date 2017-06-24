@@ -31,7 +31,7 @@
         <activity android:name=".activity.RegisterActivity" />
         <activity
             android:name=".activity.MainActivity"
-            android:launchMode="singleTask"></activity>
+            android:launchMode="singleTask" />
         <activity android:name=".activity.ResetPasswordActivity" />
         <activity android:name=".activity.MemoActivity" />
         <activity android:name=".activity.MemoCreateActivity" />
@@ -70,7 +70,8 @@
 
         <activity android:name=".activity.WebActivity" />
         <activity android:name=".activity.RobotActivity" />
-        <activity android:name=".activity.TargetDetailActivity"></activity>
+        <activity android:name=".activity.TargetDetailActivity" />
+        <activity android:name=".activity.TargetCreateActivity"></activity>
     </application>
 
 </manifest>
