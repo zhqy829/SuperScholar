@@ -24,7 +24,7 @@ public class TargetItem implements Parcelable{
     private int lastedWeek;//持续周数
     private boolean isCheck=true;//是否打卡检测
     private boolean needRemind=true;//是否需要提醒，isCheck=true时neeedRemind必须为true
-    private BoundsTime remindTime;//提醒的时间，needRemind=false时为空
+    private BoundsTime remindTime;//提醒的时间，不需要提醒时也不能为空
     private Date startDate;//目标开始日期
     private int signDays=0;//打卡总天数
     private int consecutiveSignDays=0;//连续打卡天数
@@ -34,32 +34,36 @@ public class TargetItem implements Parcelable{
     private int []weekSignTimes;//持续的周中各周的打卡次数
     private boolean isValid=true;//是否有效，达到周数后为false
     private List<Date>signDates;//打卡日期列表
+    private int currencyReward;//每次打卡奖励币的奖励
 
     //检测或非检测需要提醒的构造方法
-    public TargetItem(String name,int timesPerWeek,int lastedWeek,boolean isCheck,int hour,int min,Date startDate){
+    public TargetItem(String name,int timesPerWeek,int lastedWeek,boolean isCheck,int hour,int min,Date startDate,int currencyReward){
         this.uuid=UUID.randomUUID();
         this.name=name;
         this.timesPerWeek=timesPerWeek;
         this.lastedWeek=lastedWeek;
         this.isCheck=isCheck;
+        this.needRemind=true;
         this.remindTime=new BoundsTime(hour,min);
         this.startDate=startDate;
         this.weekSignTimes=new int[lastedWeek];
         this.signDates=new ArrayList<>();
+        this.currencyReward=currencyReward;
     }
 
     //非检测不需要提醒的构造方法
-    public TargetItem(String name,int timesPerWeek,int lastedWeek,Date startDate){
+    public TargetItem(String name,int timesPerWeek,int lastedWeek,Date startDate,int currencyReward){
         this.uuid=UUID.randomUUID();
         this.name=name;
         this.timesPerWeek=timesPerWeek;
         this.lastedWeek=lastedWeek;
         this.isCheck=false;
         this.needRemind=false;
-        this.remindTime=null;
+        this.remindTime=new BoundsTime(0,0);
         this.startDate=startDate;
         this.weekSignTimes=new int[lastedWeek];
         this.signDates=new ArrayList<>();
+        this.currencyReward=currencyReward;
     }
 
     public TargetItem(){}
@@ -192,6 +196,14 @@ public class TargetItem implements Parcelable{
         this.signDates = signDates;
     }
 
+    public int getCurrencyReward() {
+        return currencyReward;
+    }
+
+    public void setCurrencyReward(int currencyReward) {
+        this.currencyReward = currencyReward;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -215,6 +227,7 @@ public class TargetItem implements Parcelable{
         dest.writeIntArray(weekSignTimes);
         dest.writeByte((byte) (isValid ? 1 : 0));
         dest.writeSerializable((ArrayList)signDates);
+        dest.writeInt(currencyReward);
     }
 
     public static final Parcelable.Creator<TargetItem> CREATOR =new Parcelable.Creator<TargetItem>(){
@@ -238,6 +251,7 @@ public class TargetItem implements Parcelable{
             source.readIntArray(targetItem.weekSignTimes);
             targetItem.isValid=source.readByte()!=0;
             targetItem.signDates=(ArrayList)source.readSerializable();
+            targetItem.currencyReward=source.readInt();
             return targetItem;
         }
 

@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/alterRemindTime"
-        android:title="修改提醒"
+        android:title="修改目标"
         app:showAsAction="never"/>
 
     <item

@@ -46,7 +46,8 @@ public class TargetBaseManager {
                             COL_REMIND_HOUR+" INTEGER," +
                             COL_REMIND_MIN+" INTEGER," +
                             COL_START_DATE+" TEXT," +
-                            COL_SIGN_DATES+" TEXT" +
+                            COL_SIGN_DATES+" TEXT," +
+                            COL_CURRENCY_REWARD+" INTEGER"+
                             ")"
             );
         }
@@ -74,6 +75,7 @@ public class TargetBaseManager {
             int remindMin=getInt(getColumnIndex(COL_REMIND_MIN));
             String startDateString=getString(getColumnIndex(COL_START_DATE));
             String signDatesString=getString(getColumnIndex(COL_SIGN_DATES));
+            int currencyReward=getInt(getColumnIndex(COL_CURRENCY_REWARD));
 
             TargetItem targetItem=new TargetItem();
             targetItem.setUuid(UUID.fromString(uuidString));
@@ -84,6 +86,7 @@ public class TargetBaseManager {
             targetItem.setNeedRemind(needRemind!=0);
             targetItem.setRemindTime(new BoundsTime(remindHour,remindMin));
             targetItem.setStartDate(Date.parseDate(startDateString));
+            targetItem.setCurrencyReward(currencyReward);
 
             //打卡列表，打卡总天数
             StringTokenizer splitDates=new StringTokenizer(signDatesString,"*");
@@ -181,6 +184,7 @@ public class TargetBaseManager {
     private static final String COL_REMIND_MIN="remindMin";
     private static final String COL_START_DATE="startDate";
     private static final String COL_SIGN_DATES="signDates";
+    private static final String COL_CURRENCY_REWARD="currencyReward";
 
     private SQLiteDatabase database;
 
@@ -199,6 +203,7 @@ public class TargetBaseManager {
         values.put(COL_REMIND_HOUR,targetItem.getRemindTime().getHour());
         values.put(COL_REMIND_MIN,targetItem.getRemindTime().getMin());
         values.put(COL_START_DATE,targetItem.getStartDate().toString());
+        values.put(COL_CURRENCY_REWARD,targetItem.getCurrencyReward());
         String signsDateStr="";
         List<Date>signDates=targetItem.getSignDates();
         Iterator<Date>iterator=signDates.iterator();
@@ -260,7 +265,7 @@ public class TargetBaseManager {
     }
 
     //INSERT 向数据库添加数据
-    public void insertItem(TargetItem targetItem){
+    public void insertItem(TargetItem targetItem) {
         ContentValues values=getContentValues(targetItem);
         database.insert(TABLE_NAME,null,values);
     }

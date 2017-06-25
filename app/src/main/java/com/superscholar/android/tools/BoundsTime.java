@@ -90,6 +90,8 @@ public class BoundsTime extends Time implements Serializable,Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(hour);
+        dest.writeInt(min);
         dest.writeParcelable(lowerTime,flags);
         dest.writeParcelable(upperTime,flags);
     }
@@ -98,6 +100,8 @@ public class BoundsTime extends Time implements Serializable,Parcelable {
         @Override
         public BoundsTime createFromParcel(Parcel source) {
             BoundsTime boundsTime =new BoundsTime();
+            boundsTime.hour=source.readInt();
+            boundsTime.min=source.readInt();
             boundsTime.lowerTime=source.readParcelable(Time.class.getClassLoader());
             boundsTime.upperTime=source.readParcelable(Time.class.getClassLoader());
             return boundsTime;

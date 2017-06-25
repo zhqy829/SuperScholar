@@ -26,7 +26,7 @@ public class Time implements Parcelable {
     }
 
     public Time(Calendar calendar){
-        hour=calendar.get(Calendar.HOUR);
+        hour=calendar.get(Calendar.HOUR_OF_DAY);
         min=calendar.get(Calendar.MINUTE);
     }
 

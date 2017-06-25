@@ -36,7 +36,7 @@ public class TargetDetailActivity extends BaseActivity {
     private TargetItem targetItem;
     private ListView listView;  //显示信息的列表
     private TextView todayStatus;  //日历下边显示今天打卡状态
-    private String []listViewData=new String[7];
+    private String []listViewData=new String[8];
     private ArrayAdapter<String>adapter;
     private int position;
     private Date endDate;
@@ -150,17 +150,17 @@ public class TargetDetailActivity extends BaseActivity {
         listViewData[4]=remindTimeStr;
         listViewData[5]=currentWeekStatusText;
         listViewData[6]=lastedWeekStatusText;
+        listViewData[7]="每次打卡您将获得"+targetItem.getCurrencyReward()+"奖励币";
 
         adapter=new ArrayAdapter<>(TargetDetailActivity.this,android.R.layout.simple_list_item_1,listViewData);
         listView.setAdapter(adapter);
     }
 
-    //menu修改提醒项被点击事件
+    //menu修改目标项被点击事件
     private void onAlterRemindTimeClicked(){
-        /*Intent intent=new Intent(this,TargetCreateActivity.class);
+        Intent intent=new Intent(this,TargetUpdateActivity.class);
         intent.putExtra("targetItem",targetItem);
-        intent.putExtra("alter",true);
-        startActivityForResult(intent,0);*/
+        startActivityForResult(intent,0);
     }
 
     //menu放弃目标项被点击事件
@@ -230,34 +230,36 @@ public class TargetDetailActivity extends BaseActivity {
         switch (requestCode){
             case 0:
                 if(resultCode==RESULT_OK){
-                    /*
-                    boolean needRemind=data.getBooleanExtra("needRemind",false);
-                    int hour=data.getIntExtra("hour",0);
-                    int min=data.getIntExtra("min",0);
-                    if(needRemind!=targetItem.isNeedRemind()||
-                            (needRemind==true&&hour!=targetItem.getRemindHour()||min!=targetItem.getRemindMin())){
-                        targetItem.setNeedRemind(needRemind);
-                        String remindText="提醒时间:";
-                        if(needRemind){
-                            targetItem.setRemindHour(hour);
-                            targetItem.setRemindMin(min);
-                            if(hour<10) remindText=remindText+"0"+String.valueOf(hour)+":";
-                            else remindText=remindText+String.valueOf(hour)+":";
-                            if(min<10) remindText=remindText+"0"+String.valueOf(min);
-                            else remindText=remindText+String.valueOf(min);
-                        }else{
-                            remindText+="不需要提醒";
-                        }
-                        listViewData[6]=remindText;
+                    if(targetItem.isCheck()){
+                        targetItem=data.getParcelableExtra("targetUpdate");
+                        listViewData[7]="每次打卡您将获得"+targetItem.getCurrencyReward()+"奖励币";
                         adapter.notifyDataSetChanged();
                         Toast.makeText(TargetDetailActivity.this,"修改成功",Toast.LENGTH_SHORT).show();
                         Intent intent=new Intent();
                         intent.putExtra("position",position);
                         intent.putExtra("targetItem",targetItem);
                         setResult(RESULT_TARGETDETAIL_ALTER,intent);
-
+                    }else{
+                        targetItem=data.getParcelableExtra("targetUpdate");
+                        listViewData[7]="每次打卡您将获得"+targetItem.getCurrencyReward()+"奖励币";
+                        if(targetItem.isNeedRemind()){
+                            String hour,min;
+                            BoundsTime remindTime=targetItem.getRemindTime();
+                            if(remindTime.getHour()<10) hour="0"+String.valueOf(remindTime.getHour());
+                            else hour=String.valueOf(remindTime.getHour());
+                            if(remindTime.getMin()<10) min="0"+String.valueOf(remindTime.getMin());
+                            else min=String.valueOf(remindTime.getMin());
+                            listViewData[4]="提醒时间:"+hour+":"+min;
+                        }else{
+                            listViewData[4]="提醒时间:"+"不需要提醒";
+                        }
+                        adapter.notifyDataSetChanged();
+                        Toast.makeText(TargetDetailActivity.this,"修改成功",Toast.LENGTH_SHORT).show();
+                        Intent intent=new Intent();
+                        intent.putExtra("position",position);
+                        intent.putExtra("targetItem",targetItem);
+                        setResult(RESULT_TARGETDETAIL_ALTER,intent);
                     }
-                    */
                 }
                 break;
             default:

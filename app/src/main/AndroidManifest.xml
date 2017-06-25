@@ -71,7 +71,9 @@
         <activity android:name=".activity.WebActivity" />
         <activity android:name=".activity.RobotActivity" />
         <activity android:name=".activity.TargetDetailActivity" />
-        <activity android:name=".activity.TargetCreateActivity"></activity>
+        <activity android:name=".activity.TargetCreateActivity" />
+        <activity android:name=".activity.TargetUpdateActivity" />
+        <activity android:name=".activity.TargetHelpActivity"></activity>
     </application>
 
 </manifest>

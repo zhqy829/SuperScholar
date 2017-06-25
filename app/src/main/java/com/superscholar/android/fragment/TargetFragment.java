@@ -39,7 +39,7 @@ public class TargetFragment extends Fragment{
     public static final int REQUEST_TARGETDETAIL = 2;
 
     //resultCode RESULT_OK==-1,RESULT_CANCELED==0,RESULT_FIRST_USER==1
-    public static final int RESULT_TARGETDETAIL_ALTER=2;
+    public static final int RESULT_TARGETDETAIL_UPDATE=2;
     public static final int RESULT_TARGETDETAIL_DELETE=3;
 
     private TargetAdapter adapter;
@@ -64,27 +64,8 @@ public class TargetFragment extends Fragment{
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*
-                Toast.makeText(getActivity(),"add",Toast.LENGTH_SHORT).show();
-                TargetItem item1=new TargetItem("早起",5,4,true,6,30,new Date(2017,6,18));
-                List<Date>signDates=new ArrayList<Date>();
-                signDates.add(new Date(2017,6,19));
-                signDates.add(new Date(2017,6,20));
-                signDates.add(new Date(2017,6,21));
-                signDates.add(new Date(2017,6,22));
-                signDates.add(new Date(2017,6,23));
-                item1.setSignDates(signDates);
-                item1.setCurrentWeek(1);
-                item1.getWeekSignTimes()[0]=5;
-                item1.setTodaySign(true);
-                targetList.add(item1);
-                adapter.notifyItemInserted(0);
-                manager.insertItem(item1);
-                hintText.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.VISIBLE);
-                */
                 Intent intent=new Intent(getActivity(), TargetCreateActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent,REQUEST_CREATETARGET);
             }
         });
     }
@@ -137,12 +118,24 @@ public class TargetFragment extends Fragment{
         switch (requestCode){
             case REQUEST_CREATETARGET:
                 if(resultCode==RESULT_OK){
-
+                    TargetItem targetItem=data.getParcelableExtra("targetCreate");
+                    manager.insertItem(targetItem);
+                    targetList.add(targetItem);
+                    adapter.notifyItemInserted(targetList.size()-1);
+                    Toast.makeText(getActivity(),"创建成功",Toast.LENGTH_SHORT).show();
+                    if(hintText.getVisibility()==View.VISIBLE){
+                        hintText.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                    }
                 }
                 break;
             case REQUEST_TARGETDETAIL:
-                if(resultCode==RESULT_TARGETDETAIL_ALTER){
-
+                if(resultCode==RESULT_TARGETDETAIL_UPDATE){
+                    int position=data.getIntExtra("position",0);
+                    TargetItem targetItem=data.getParcelableExtra("targetItem");
+                    targetList.set(position,targetItem);
+                    adapter.notifyItemChanged(position);
+                    manager.updateItem(targetItem);
                 }else if(resultCode==RESULT_TARGETDETAIL_DELETE){
                     int position=data.getIntExtra("position",0);
                     TargetItem targetItem=targetList.get(position);

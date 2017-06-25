@@ -13,13 +13,14 @@ import android.view.View;
 
 import com.superscholar.android.R;
 import com.superscholar.android.adapter.EventPagerAdapter;
+import com.superscholar.android.control.BaseActivity;
 import com.superscholar.android.fragment.TargetCreateCheckFragment;
 import com.superscholar.android.fragment.TargetCreateNormalFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TargetCreateActivity extends AppCompatActivity {
+public class TargetCreateActivity extends BaseActivity {
 
 
     private TabLayout tabLayout;
