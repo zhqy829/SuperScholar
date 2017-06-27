@@ -5,6 +5,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -273,13 +274,22 @@ public class TargetDetailActivity extends BaseActivity {
                 finish();
                 return true;
             case R.id.deleteTarget:
-                onDeleteTargetClicked();
+                if(!targetItem.isValid()){
+                    Toast.makeText(TargetDetailActivity.this,"目标已失效",Toast.LENGTH_SHORT).show();
+                }else{
+                    onDeleteTargetClicked();
+                }
                 break;
             case R.id.alterRemindTime:
-                onAlterRemindTimeClicked();
+                if(!targetItem.isValid()){
+                    Toast.makeText(TargetDetailActivity.this,"目标已失效",Toast.LENGTH_SHORT).show();
+                }else {
+                    onAlterRemindTimeClicked();
+                }
                 break;
             default:
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

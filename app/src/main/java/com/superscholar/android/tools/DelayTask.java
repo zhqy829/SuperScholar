@@ -1,8 +1,10 @@
 package com.superscholar.android.tools;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Created by Administrator on 2017/3/18.
@@ -47,14 +49,11 @@ public class DelayTask implements Comparable<DelayTask>{
     }
 
     public static long getCurrentTimestamp(){
-        Date date=new Date();
-        SimpleDateFormat df = new SimpleDateFormat("HH");
-        int currentHour=Integer.parseInt(df.format(date));
-        df = new SimpleDateFormat("mm");
-        int currentMin=Integer.parseInt(df.format(date));
-        df = new SimpleDateFormat("ss");
-        int currentSec=Integer.parseInt(df.format(date));
-        long currentTimeStamp=currentSec*1000+currentMin*60*1000+currentHour*60*60*1000;
+        Calendar calendar=Calendar.getInstance();
+        int hour=calendar.get(Calendar.HOUR_OF_DAY);
+        int min=calendar.get(Calendar.MINUTE);
+        int sec=calendar.get(Calendar.SECOND);
+        long currentTimeStamp=sec*1000+min*60*1000+hour*60*60*1000;
         return currentTimeStamp;
     }
 

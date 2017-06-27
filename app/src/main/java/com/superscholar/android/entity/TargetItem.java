@@ -26,15 +26,18 @@ public class TargetItem implements Parcelable{
     private boolean needRemind=true;//是否需要提醒，isCheck=true时neeedRemind必须为true
     private BoundsTime remindTime;//提醒的时间，不需要提醒时也不能为空
     private Date startDate;//目标开始日期
+    private int currencyReward;//每次打卡奖励币的奖励
+
     private int signDays=0;//打卡总天数
     private int consecutiveSignDays=0;//连续打卡天数
-    private int currentWeek=1;//当前周数
-    private boolean isTodaySign=false;//今天是否打卡
-    private boolean isYesterdaySign=false;//昨天是否打卡
     private int []weekSignTimes;//持续的周中各周的打卡次数
-    private boolean isValid=true;//是否有效，达到周数后为false
     private List<Date>signDates;//打卡日期列表
-    private int currencyReward;//每次打卡奖励币的奖励
+
+    private boolean isTodaySign=false;//今天是否打卡
+
+    private boolean isYesterdaySign=false;//昨天是否打卡
+    private int currentWeek=1;//当前周数
+    private boolean isValid=true;//是否有效，达到周数后为false
 
     //检测或非检测需要提醒的构造方法
     public TargetItem(String name,int timesPerWeek,int lastedWeek,boolean isCheck,int hour,int min,Date startDate,int currencyReward){

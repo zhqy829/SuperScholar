@@ -101,14 +101,14 @@ public class TargetBaseManager {
 
             //是否失效，当前周数
             Date todayDate=new Date(Calendar.getInstance());
-            Date endDate=(Date)todayDate.clone();//失效日期，该天已失效
+            Date startDate=Date.parseDate(startDateString);
+            Date endDate=(Date)startDate.clone();//失效日期，该天已失效
             endDate.dayAdd(lastedWeek*7);
             if(!endDate.isLate(todayDate)){
                 targetItem.setValid(false);
                 targetItem.setCurrentWeek(lastedWeek);
             }else{
                 int currentWeek=1;
-                Date startDate=Date.parseDate(startDateString);
                 startDate.dayAdd(7);
                 while(!startDate.isLate(todayDate)){
                     currentWeek++;
@@ -144,21 +144,21 @@ public class TargetBaseManager {
             }
 
             //昨天是否打卡
-            Date yesterdayDate=(Date)todayDate.clone();
-            yesterdayDate.daySubtractOne();
-            if(signdates.size()==1&&yesterdayDate.isEquals(signdates.get(signdates.size()-1))){
+            todayDate.daySubtractOne();
+            if(signdates.size()==1&&todayDate.isEquals(signdates.get(signdates.size()-1))){
                 targetItem.setYesterdaySign(true);
-            }else if(signdates.size()>1&&(yesterdayDate.isEquals(signdates.get(signdates.size()-1))||
-                    (signdates.size()>1&&yesterdayDate.isEquals(signdates.get(signdates.size()-2))))){
+            }else if(signdates.size()>1&&(todayDate.isEquals(signdates.get(signdates.size()-1))||
+                    (signdates.size()>1&&todayDate.isEquals(signdates.get(signdates.size()-2))))){
                 targetItem.setYesterdaySign(true);
             }
 
             //各周打卡天数
+            startDate=Date.parseDate(startDateString);
             int []weekSignTimes=new int[lastedWeek];
             for(int i=0,j=0;i<lastedWeek;i++){
-                todayDate.dayAdd(7);
+                startDate.dayAdd(7);
                 while(j<signdates.size()){
-                    if(signdates.get(j).isEarly(todayDate)){
+                    if(signdates.get(j).isEarly(startDate)){
                         weekSignTimes[i]++;
                         j++;
                     }else{

@@ -27,18 +27,18 @@ import java.util.List;
 public class TargetAdapter extends RecyclerView.Adapter<TargetAdapter.ViewHolder> {
 
     public interface OnItemClickedListener{
-        void onButtonClicked(int p);
+        void onButtonClicked(ViewHolder holder);
         void onViewClicked(int p);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        private LinearLayout layout;
-        private TextView nameText;
-        private TextView weekText;
-        private TextView statusText;
-        private ImageView signButton;
-        private LinearLayout remindLayout;
-        private TextView remindText;
+        public LinearLayout layout;
+        public TextView nameText;
+        public TextView weekText;
+        public TextView statusText;
+        public ImageView signButton;
+        public LinearLayout remindLayout;
+        public TextView remindText;
 
         public ViewHolder(View view){
             super(view);
@@ -80,6 +80,7 @@ public class TargetAdapter extends RecyclerView.Adapter<TargetAdapter.ViewHolder
             @Override
             public void onClick(View view) {
                 //打卡
+                listener.onButtonClicked(holder);
             }
         });
 
