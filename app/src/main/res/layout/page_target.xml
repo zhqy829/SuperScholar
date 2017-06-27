@@ -27,6 +27,6 @@
         android:layout_margin="16dp"
         app:fab_icon="@drawable/fab_add"
         app:fab_colorNormal="#1C86EE"
-        app:fab_colorPressed="#87CEFA" />
+        app:fab_colorPressed="#1C86EE" />
 
 </android.support.design.widget.CoordinatorLayout>
