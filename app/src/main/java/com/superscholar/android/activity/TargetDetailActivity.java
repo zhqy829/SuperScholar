@@ -30,8 +30,10 @@ import java.util.List;
 
 public class TargetDetailActivity extends BaseActivity {
 
-    private final int RESULT_TARGETDETAIL_ALTER=2;
-    private final int RESULT_TARGETDETAIL_DELETE=3;
+    private static final int REQUEST_TARGET_UPDATE=0;
+
+    private static final int RESULT_TARGETDETAIL_UPDATE=2;
+    private static final int RESULT_TARGETDETAIL_DELETE=3;
 
     private CircleCalendarView circleCalendarView;
     private TargetItem targetItem;
@@ -161,7 +163,7 @@ public class TargetDetailActivity extends BaseActivity {
     private void onAlterRemindTimeClicked(){
         Intent intent=new Intent(this,TargetUpdateActivity.class);
         intent.putExtra("targetItem",targetItem);
-        startActivityForResult(intent,0);
+        startActivityForResult(intent,REQUEST_TARGET_UPDATE);
     }
 
     //menu放弃目标项被点击事件
@@ -239,7 +241,7 @@ public class TargetDetailActivity extends BaseActivity {
                         Intent intent=new Intent();
                         intent.putExtra("position",position);
                         intent.putExtra("targetItem",targetItem);
-                        setResult(RESULT_TARGETDETAIL_ALTER,intent);
+                        setResult(RESULT_TARGETDETAIL_UPDATE,intent);
                     }else{
                         targetItem=data.getParcelableExtra("targetUpdate");
                         listViewData[7]="每次打卡您将获得"+targetItem.getCurrencyReward()+"奖励币";
@@ -259,7 +261,7 @@ public class TargetDetailActivity extends BaseActivity {
                         Intent intent=new Intent();
                         intent.putExtra("position",position);
                         intent.putExtra("targetItem",targetItem);
-                        setResult(RESULT_TARGETDETAIL_ALTER,intent);
+                        setResult(RESULT_TARGETDETAIL_UPDATE,intent);
                     }
                 }
                 break;

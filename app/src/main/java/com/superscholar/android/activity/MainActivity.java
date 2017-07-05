@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Environment;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -584,12 +585,17 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
         switch (item.getItemId()){
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 break;
             case R.id.robot:
-                Intent intent=new Intent(MainActivity.this,RobotActivity.class);
+                intent=new Intent(MainActivity.this,RobotActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.store:
+                intent=new Intent(MainActivity.this,StoreActivity.class);
                 startActivity(intent);
                 break;
             default:

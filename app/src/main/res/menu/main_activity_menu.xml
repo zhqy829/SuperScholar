@@ -3,6 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/store"
+        android:title="奖励商店"
+        android:icon="@drawable/store"
+        app:showAsAction="ifRoom"/>
+
+    <item
         android:id="@+id/robot"
         android:title="请教小学霸"
         app:showAsAction="never"/>

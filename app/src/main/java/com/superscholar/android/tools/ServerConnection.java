@@ -24,7 +24,8 @@ public class ServerConnection {
     private static final String appKey="2621e4d99e99494faa04018d9a2e9cbd";  //图灵
 
     //服务器地址
-    final static public String host = "http://lylllcc.cc:8082/";
+    //final static public String host = "http://lylllcc.cc:8082/";
+    final static public String host = "http://123.207.144.29:8082/";
 
     //其他操作
     final static public String site_icon="img/logo.png";  //logo图片

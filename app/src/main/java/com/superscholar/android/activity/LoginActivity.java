@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.superscholar.android.control.BaseActivity;
 import com.superscholar.android.tools.EncryptionDevice;
+import com.superscholar.android.tools.LogUtil;
 import com.superscholar.android.tools.ServerConnection;
 import com.superscholar.android.R;
 
@@ -157,6 +158,15 @@ public class LoginActivity extends BaseActivity {
                         fileStatus=true;
                     }catch (JSONException ex){
                         ex.printStackTrace();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                pd.dismiss();
+                                Toast.makeText(LoginActivity.this,"登陆异常",
+                                        Toast.LENGTH_SHORT).show();
+                                fileStatus=false;
+                            }
+                        });
                     }
                 }
             }
