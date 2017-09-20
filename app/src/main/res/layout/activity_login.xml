@@ -59,7 +59,6 @@
             android:textSize="22sp"/>
     </android.support.design.widget.TextInputLayout>
 
-
         <com.andexert.library.RippleView
             android:layout_width="match_parent"
             android:layout_height="40dp"

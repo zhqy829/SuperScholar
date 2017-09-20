@@ -16,6 +16,7 @@ import toan.android.floatingactionmenu.FloatingActionButton;
 
 public class SlidableFloatingActionButton extends FloatingActionButton implements View.OnTouchListener{
 
+    private float scale;
     private boolean isMove;
     private int lastX;
     private int lastY;
@@ -29,7 +30,8 @@ public class SlidableFloatingActionButton extends FloatingActionButton implement
         this.setOnTouchListener(this);
         DisplayMetrics dm = getResources().getDisplayMetrics();
         screenWidth = dm.widthPixels;
-        screenHeight = dm.heightPixels - 50;
+        screenHeight = dm.heightPixels;
+        scale=screenHeight/960.0f;
     }
 
     public SlidableFloatingActionButton(Context context, AttributeSet attrs) {
@@ -37,7 +39,8 @@ public class SlidableFloatingActionButton extends FloatingActionButton implement
         this.setOnTouchListener(this);
         DisplayMetrics dm = getResources().getDisplayMetrics();
         screenWidth = dm.widthPixels;
-        screenHeight = dm.heightPixels - 50;
+        screenHeight = dm.heightPixels;
+        scale=screenHeight/960.0f;
     }
 
     public SlidableFloatingActionButton(Context context, AttributeSet attrs, int defStyle) {
@@ -45,7 +48,8 @@ public class SlidableFloatingActionButton extends FloatingActionButton implement
         this.setOnTouchListener(this);
         DisplayMetrics dm = getResources().getDisplayMetrics();
         screenWidth = dm.widthPixels;
-        screenHeight = dm.heightPixels - 50;
+        screenHeight = dm.heightPixels;
+        scale=screenHeight/960.0f;
     }
 
     @Override
@@ -76,8 +80,8 @@ public class SlidableFloatingActionButton extends FloatingActionButton implement
                 top = 0;
                 bottom = top + view.getHeight();
             }
-            if(bottom > screenHeight-150){
-                bottom = screenHeight-150;
+            if(bottom > screenHeight-200*scale){
+                bottom = (int)(screenHeight-200*scale);
                 top = bottom - view.getHeight();
             }
             view.layout(left, top, right, bottom);

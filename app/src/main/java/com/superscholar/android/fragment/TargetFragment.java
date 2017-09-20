@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -23,13 +24,14 @@ import com.superscholar.android.activity.TargetDetailActivity;
 import com.superscholar.android.adapter.TargetAdapter;
 import com.superscholar.android.control.SlidableFloatingActionButton;
 import com.superscholar.android.entity.TargetItem;
+import com.superscholar.android.entity.User;
 import com.superscholar.android.service.TargetRemindService;
-import com.superscholar.android.tools.BoundsTime;
 import com.superscholar.android.tools.Date;
 import com.superscholar.android.tools.LocationManager;
 import com.superscholar.android.tools.ShakeManager;
 import com.superscholar.android.tools.TargetBaseManager;
 import com.superscholar.android.tools.Time;
+import com.superscholar.android.tools.UserLib;
 import com.twotoasters.jazzylistview.effects.WaveEffect;
 import com.twotoasters.jazzylistview.recyclerview.JazzyRecyclerViewScrollListener;
 
@@ -37,8 +39,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.BIND_AUTO_CREATE;
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by zhqy on 2017/6/14.
@@ -123,17 +127,18 @@ public class TargetFragment extends Fragment{
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*
+
                 Calendar calendar=Calendar.getInstance();
                 if(calendar.get(Calendar.DAY_OF_WEEK)!=Calendar.SUNDAY){
                     Toast.makeText(getActivity(),"只有星期天才能创建一周的目标哦",Toast.LENGTH_SHORT).show();
                     return;
                 }
-                */
+
                 Intent intent=new Intent(getActivity(), TargetCreateActivity.class);
                 startActivityForResult(intent,REQUEST_CREATETARGET);
             }
         });
+
     }
 
     //recyclerView初始化
@@ -226,6 +231,9 @@ public class TargetFragment extends Fragment{
                         targetItem.getWeekSignTimes()[targetItem.getCurrentWeek()-1]++;
 
                         targetBaseManager.updateItem(targetItem);
+
+                        obtainCurrency(targetItem.getCurrencyReward());
+
                         Toast.makeText(getActivity(),"恭喜你，打卡成功",Toast.LENGTH_SHORT).show();
 
                         holder.statusText.setText("本周打卡"+targetItem.getWeekSignTimes()[targetItem.getCurrentWeek()-1]+"次，目标" +
@@ -317,6 +325,9 @@ public class TargetFragment extends Fragment{
                 targetItem.getWeekSignTimes()[targetItem.getCurrentWeek()-1]++;
 
                 targetBaseManager.updateItem(targetItem);
+
+                obtainCurrency(targetItem.getCurrencyReward());
+
                 Toast.makeText(getActivity(),"恭喜你，打卡成功",Toast.LENGTH_SHORT).show();
 
                 holder.statusText.setText("本周打卡"+targetItem.getWeekSignTimes()[targetItem.getCurrentWeek()-1]+"次，目标" +
@@ -360,6 +371,9 @@ public class TargetFragment extends Fragment{
                         targetItem.getWeekSignTimes()[targetItem.getCurrentWeek()-1]++;
 
                         targetBaseManager.updateItem(targetItem);
+
+                        obtainCurrency(targetItem.getCurrencyReward());
+
                         Toast.makeText(getActivity(),"恭喜你，打卡成功",Toast.LENGTH_SHORT).show();
 
                         holder.statusText.setText("本周打卡"+targetItem.getWeekSignTimes()[targetItem.getCurrentWeek()-1]+"次，目标" +
@@ -404,6 +418,15 @@ public class TargetFragment extends Fragment{
         locationDialog.setTitle("定位检测");
         locationDialog.setMessage("定位中，请稍候...");
         locationDialog.setCancelable(false);
+    }
+
+    private void obtainCurrency(int currency){
+        User user= UserLib.getInstance().getUser();
+        user.setCurrencyAmount(user.getCurrencyAmount()+currency);
+        SharedPreferences pref=getActivity().getSharedPreferences("data_currency",MODE_PRIVATE);
+        SharedPreferences.Editor editor=pref.edit();
+        editor.putInt("currencyAmount",user.getCurrencyAmount());
+        editor.apply();
     }
 
     @Override
@@ -468,4 +491,5 @@ public class TargetFragment extends Fragment{
             default:
         }
     }
+
 }

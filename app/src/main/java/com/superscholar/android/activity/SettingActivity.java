@@ -19,7 +19,7 @@ import android.widget.Toast;
 import com.superscholar.android.R;
 import com.superscholar.android.control.BaseActivity;
 import com.superscholar.android.service.ApkDownloadService;
-import com.superscholar.android.tools.ServerConnection;
+import com.superscholar.android.tools.ServerConnector;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -110,7 +110,7 @@ public class SettingActivity extends BaseActivity {
 
     //开始下载
     public void startApkDownload(){
-        apkDownloadBinder.startDownload(ServerConnection.host+ServerConnection.site_apk);
+        apkDownloadBinder.startDownload(ServerConnector.getInstance().getApkUrl());
     }
 
     //分享操作
@@ -122,7 +122,7 @@ public class SettingActivity extends BaseActivity {
         oks.setTitle(getString(R.string.app_name));
         oks.setTitleUrl("http://lylllcc.cc/doc");
         oks.setText("这是一款高效的习惯养成工具");
-        oks.setImageUrl(ServerConnection.host+ServerConnection.site_icon);
+        oks.setImageUrl(ServerConnector.getInstance().getIconUrl());
         oks.setUrl("http://lylllcc.cc/doc");
         oks.setSite(getString(R.string.app_name));
         oks.setSiteUrl("http://lylllcc.cc/doc");
@@ -154,7 +154,7 @@ public class SettingActivity extends BaseActivity {
         pd.setMessage("正在检测是否有新版本...");
         pd.setCancelable(false);
         pd.show();
-        ServerConnection.getVersion(new Callback() {
+        ServerConnector.getInstance().getVersion(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 runOnUiThread(new Runnable() {
@@ -174,7 +174,7 @@ public class SettingActivity extends BaseActivity {
                     JSONObject jsonObject = new JSONObject(responseData);
                     int versionCode=Integer.parseInt(jsonObject.getString("VERSION_CODE"));
                     String  versionName=jsonObject.getString("VERSION_NAME");
-                    if(versionCode>ServerConnection.VERSION_CODE){
+                    if(versionCode>ServerConnector.getInstance().VERSION_CODE){
                         Snackbar.make(menuList,"发现新版本：  "+versionName+"   是否更新？",Snackbar.LENGTH_LONG)
                                 .setAction("更新", new View.OnClickListener() {
                                     @Override

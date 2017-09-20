@@ -7,7 +7,7 @@ import com.superscholar.android.adapter.MessageAdapter;
 import com.superscholar.android.control.BaseActivity;
 import com.superscholar.android.entity.Message;
 import com.superscholar.android.tools.LogUtil;
-import com.superscholar.android.tools.ServerConnection;
+import com.superscholar.android.tools.ServerConnector;
 
 
 import android.support.v7.app.ActionBar;
@@ -77,7 +77,7 @@ public class RobotActivity extends BaseActivity {
                     adapter.notifyItemInserted(msgList.size() - 1);
                     msgRecyclerView.scrollToPosition(msgList.size() - 1); // 将ListView定位到最后一行
                     inputEdit.setText("");
-                    ServerConnection.connectRobotAPI(content, new Callback() {
+                    ServerConnector.getInstance().connectRobotAPI(content, new Callback() {
                         @Override
                         public void onFailure(Call call, IOException e) {
                             runOnUiThread(new Runnable() {

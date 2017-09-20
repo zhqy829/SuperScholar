@@ -1,6 +1,7 @@
 package com.superscholar.android.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.ActionBar;
@@ -25,7 +26,9 @@ import com.superscholar.android.adapter.GoodsViewAdapter;
 import com.superscholar.android.control.BaseActivity;
 import com.superscholar.android.entity.ConsumptionDetail;
 import com.superscholar.android.entity.Goods;
+import com.superscholar.android.entity.User;
 import com.superscholar.android.tools.GoodsBaseManager;
+import com.superscholar.android.tools.UserLib;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -36,6 +39,7 @@ public class StoreActivity extends BaseActivity {
 
     private SwipeMenuListView listView;
     private TextView hintText;
+    private TextView currencyText;
 
     private GoodsViewAdapter adapter;
 
@@ -45,10 +49,15 @@ public class StoreActivity extends BaseActivity {
     private GoodsBaseManager manager;
     private List<Goods>goodsList;
 
+    private User user;
+
     //变量初始化
     private void initVariable(){
         listView=(SwipeMenuListView)findViewById(R.id.store_listView);
         hintText=(TextView)findViewById(R.id.store_hintText);
+        currencyText=(TextView)findViewById(R.id.store_text_currency);
+        user=UserLib.getInstance().getUser();
+        currencyText.setText("奖励币:"+user.getCurrencyAmount());
     }
 
     //初始化商品数据
@@ -91,10 +100,22 @@ public class StoreActivity extends BaseActivity {
                 new GoodsViewAdapter.OnPurchaseButtonClickedListener() {
                     @Override
                     public void onPurchaseButtonClicked(int position) {
-                        Toast.makeText(StoreActivity.this,"购买成功",Toast.LENGTH_SHORT).show();
                         Goods goods=goodsList.get(position);
-                        ConsumptionDetail detail=new ConsumptionDetail(goods.getName(),goods.getPrice());
-                        manager.insertConsumptionDetail(detail);
+                        int currency=user.getCurrencyAmount();
+                        if(currency>=goods.getPrice()){
+                            Toast.makeText(StoreActivity.this,"购买成功",Toast.LENGTH_SHORT).show();
+                            ConsumptionDetail detail=new ConsumptionDetail(goods.getName(),goods.getPrice());
+                            manager.insertConsumptionDetail(detail);
+                            user.setCurrencyAmount(currency-goods.getPrice());
+                            currencyText.setText("奖励币:"+user.getCurrencyAmount());
+                            SharedPreferences pref=getSharedPreferences("data_currency",MODE_PRIVATE);
+                            SharedPreferences.Editor editor=pref.edit();
+                            editor.putInt("currencyAmount",user.getCurrencyAmount());
+                            editor.apply();
+                        }else{
+                            Toast.makeText(StoreActivity.this,"购买失败，奖励币不足",Toast.LENGTH_SHORT).show();
+                        }
+
                     }
                 });
         listView.setAdapter(adapter);

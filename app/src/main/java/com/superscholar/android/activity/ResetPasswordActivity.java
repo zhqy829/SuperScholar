@@ -13,8 +13,8 @@ import android.widget.Toast;
 
 import com.superscholar.android.control.BaseActivity;
 import com.superscholar.android.tools.EncryptionDevice;
-import com.superscholar.android.tools.ServerConnection;
 import com.superscholar.android.R;
+import com.superscholar.android.tools.ServerConnector;
 import com.superscholar.android.tools.UserLib;
 
 import org.json.JSONException;
@@ -28,6 +28,11 @@ import okhttp3.Response;
 
 public class ResetPasswordActivity extends BaseActivity {
 
+    private EditText oldPasswordEdit;
+    private EditText newPasswordEdit;
+    private EditText cPasswordEdit;
+
+
     //初始化菜单栏
     private void initToolbar(){
         Toolbar toolbar=(Toolbar)findViewById(R.id.reset_toolbar);
@@ -39,15 +44,18 @@ public class ResetPasswordActivity extends BaseActivity {
         }
     }
 
+    private void initEditText(){
+        oldPasswordEdit=(EditText)findViewById(R.id.reset_oldPasswordEdit);
+        newPasswordEdit=(EditText)findViewById(R.id.reset_newPasswordEdit);
+        cPasswordEdit=(EditText)findViewById(R.id.reset_cpasswordEdit);
+    }
+
     //初始化按钮
     private void initButton(){
         Button button=(Button)findViewById(R.id.reset_resetPasswordButton);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditText oldPasswordEdit=(EditText)findViewById(R.id.reset_oldPasswordEdit);
-                EditText newPasswordEdit=(EditText)findViewById(R.id.reset_newPasswordEdit);
-                EditText cPasswordEdit=(EditText)findViewById(R.id.reset_cpasswordEdit);
 
                 String op=oldPasswordEdit.getText().toString();
                 final String np=newPasswordEdit.getText().toString();
@@ -64,7 +72,7 @@ public class ResetPasswordActivity extends BaseActivity {
                     pd.setMessage("修改密码中，请稍候...");
                     pd.setCancelable(false);
                     pd.show();
-                    ServerConnection.sendResetPasswordMsg(UserLib.getInstance().getUser().getUsername(),
+                    ServerConnector.getInstance().sendResetPasswordMsg(UserLib.getInstance().getUser().getUsername(),
                             op, np, new Callback() {
                                 @Override
                                 public void onFailure(Call call, IOException e) {
@@ -135,6 +143,7 @@ public class ResetPasswordActivity extends BaseActivity {
         setContentView(R.layout.activity_reset_password);
 
         initToolbar();
+        initEditText();
         initButton();
     }
 

@@ -1,12 +1,10 @@
 package com.superscholar.android.activity;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.os.Environment;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -19,6 +17,7 @@ import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,11 +41,7 @@ import com.superscholar.android.fragment.TargetFragment;
 import com.superscholar.android.control.BaseActivity;
 import com.superscholar.android.R;
 
-import com.superscholar.android.tools.BoundsTime;
-import com.superscholar.android.tools.Date;
-import com.superscholar.android.tools.LogUtil;
-import com.superscholar.android.tools.ServerConnection;
-import com.superscholar.android.tools.Time;
+import com.superscholar.android.tools.ServerConnector;
 import com.superscholar.android.tools.UserLib;
 
 import org.json.JSONException;
@@ -54,7 +49,6 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -64,7 +58,6 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 
-import static com.superscholar.android.tools.ServerConnection.sendBindSIDMsg;
 
 public class MainActivity extends BaseActivity {
 
@@ -74,10 +67,10 @@ public class MainActivity extends BaseActivity {
     private TextView toolbarText;  //菜单栏TextView
 
     //滑动菜单
-    private TextView username;
-    private TextView email;
-    private TextView grade;
-    private TextView sID;
+    private TextView usernameText;
+    private TextView phoneText;
+    private TextView gradeText;
+    private TextView sidText;
     private List<Menu>menuList=new ArrayList<>();
     private Weather weather;
 
@@ -102,16 +95,23 @@ public class MainActivity extends BaseActivity {
     private int page=0;     //ViewPager页码
     private List<Fragment>fragments=new ArrayList<>();
 
+    private static final int REQUEST_PERSONAL_INFO=0;
+
+    private static final int RESULT_UPDATE_SID=2;
+    private static final int RESULT_UPDATE_PHONE=3;
+    private static final int RESULT_UPDATE_ALL=4;
+
+
     //变量初始化
     private void initVariable(){
         mDrawerLayout=(DrawerLayout)findViewById(R.id.main_drawerLayout);
 
         toolbarText=(TextView)findViewById(R.id.main_toolbarText);
 
-        username=(TextView)findViewById(R.id.slidingMenu_header_username);
-        email=(TextView)findViewById(R.id.slidingMenu_header_email);
-        grade=(TextView)findViewById(R.id.slidingMenu_header_grade);
-        sID=(TextView)findViewById(R.id.slidingMenu_header_sID);
+        usernameText=(TextView)findViewById(R.id.slidingMenu_header_username);
+        phoneText=(TextView)findViewById(R.id.slidingMenu_header_phone);
+        gradeText=(TextView)findViewById(R.id.slidingMenu_header_grade);
+        sidText=(TextView)findViewById(R.id.slidingMenu_header_sid);
 
         integrated=(LinearLayout)findViewById(R.id.bottom_integrated);
         event=(LinearLayout)findViewById(R.id.bottom_event);
@@ -147,9 +147,8 @@ public class MainActivity extends BaseActivity {
 
     //滑动菜单菜单列表数据初始化
     private void initMenuData(){
-        menuList.add(new Menu("绑定学号",R.drawable.sliding_menu_bindsid));
+        menuList.add(new Menu("个人信息编辑",R.drawable.sliding_menu_personal_info));
         menuList.add(new Menu("我的学分绩",R.drawable.sliding_menu_mygrade));
-        menuList.add(new Menu("修改密码",R.drawable.sliding_menu_password));
         menuList.add(new Menu("设置",R.drawable.sliding_menu_setting));
         menuList.add(new Menu("退出登录",R.drawable.sliding_menu_logout));
         menuList.add(new Menu("关闭程序",R.drawable.sliding_menu_exit));
@@ -166,32 +165,19 @@ public class MainActivity extends BaseActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 switch(i){
                     case 0:
-                        if(user.getsID()!=null){
-                            Snackbar.make(menu,"您已绑定学号，再次绑定将解绑原学号，是否继续？"
-                                    ,Snackbar.LENGTH_LONG).setAction("继续", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    bindSID();
-                                }
-                            }).show();
-                        }else{
-                            bindSID();
-                        }
+                        Intent intent_0=new Intent(MainActivity.this,PersonalInfoActivity.class);
+                        startActivityForResult(intent_0,REQUEST_PERSONAL_INFO);
                         break;
                     case 1:
                         break;
                     case 2:
-                        Intent intent=new Intent(MainActivity.this,ResetPasswordActivity.class);
-                        startActivity(intent);
-                        break;
-                    case 3:
                         Intent intent_2=new Intent(MainActivity.this,SettingActivity.class);
                         startActivity(intent_2);
                         break;
-                    case 4:
+                    case 3:
                         exitLogin();
                         break;
-                    case 5:
+                    case 4:
                         finish();
                         break;
                     default:
@@ -231,7 +217,7 @@ public class MainActivity extends BaseActivity {
         final TextView weatherText=(TextView)findViewById(R.id.slidingMenu_weather_text);
         final ImageView weatherImage=(ImageView)findViewById(R.id.slidingMenu_weather_image);
 
-        ServerConnection.connectWeatherAPI(new Callback() {
+        ServerConnector.getInstance().connectWeatherAPI(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 runOnUiThread(new Runnable() {
@@ -430,33 +416,15 @@ public class MainActivity extends BaseActivity {
     //用户初始化
     private void initUser(){
         try {
-            Intent intent = getIntent();
-            String username = intent.getStringExtra("username");
-            String password = intent.getStringExtra("password");
-            double grade = Double.parseDouble(intent.getStringExtra("grade"));
-            String sID = intent.getStringExtra("sID");
-            String email = intent.getStringExtra("email");
-
-            SharedPreferences pref=getSharedPreferences("data_currency",0);
-            int currencyAmount=pref.getInt("currencyAmount",0);
-
-            //实例化单例类
             user=UserLib.getInstance().getUser();
-            user.setUsername(username);
-            user.setPassword(password);
-            user.setGrade(grade);
-            user.setEmail(email);
-            user.setCurrencyAmount(currencyAmount);
 
-            this.username.setText("用户名："+username);
-            this.email.setText("邮箱："+email);
-            this.grade.setText("学分绩：" + String.valueOf(grade));
-            if (sID.equals("null")) {
-                user.setsID(null);
-                this.sID.setText("学号：" + "未绑定");
+            this.usernameText.setText("用户名："+user.getUsername());
+            this.phoneText.setText("手机号："+user.getPhone());
+            this.gradeText.setText("学分绩：" + String.valueOf(user.getGrade()));
+            if (user.getSid()==null) {
+                this.sidText.setText("学号：" + "未绑定");
             } else {
-                user.setsID(sID);
-                this.sID.setText("学号：" + sID);
+                this.sidText.setText("学号：" + user.getSid());
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -474,83 +442,6 @@ public class MainActivity extends BaseActivity {
         Intent intent=new Intent(MainActivity.this,LoginActivity.class);
         startActivity(intent);
         finish();
-    }
-
-    //绑定学号
-    private void bindSID(){
-
-        final EditText et = new EditText(this);
-        et.setHint("请输入学号");
-        et.setInputType(InputType.TYPE_CLASS_NUMBER);
-
-        new AlertDialog.Builder(this).setTitle("绑定学号")
-                .setView(et)
-                .setCancelable(false)
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        final String sID = et.getText().toString();
-                        if (sID.equals("")) {
-                            Toast.makeText(MainActivity.this, "请输入学号", Toast.LENGTH_SHORT).show();
-                        }
-                        else {
-                            final ProgressDialog pd=new ProgressDialog(MainActivity.this);
-                            pd.setTitle("绑定学号");
-                            pd.setMessage("绑定中，请稍候...");
-                            pd.setCancelable(false);
-                            pd.show();
-                            sendBindSIDMsg(user.getUsername(),sID, new Callback() {
-                                @Override
-                                public void onFailure(Call call, IOException e) {
-                                    runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            pd.dismiss();
-                                            Toast.makeText(MainActivity.this,"网络异常，请检查网络设置",
-                                                    Toast.LENGTH_SHORT).show();
-                                        }
-                                    });
-                                }
-
-                                @Override
-                                public void onResponse(Call call, Response response) throws IOException {
-                                    String responseData =response.body().string();
-                                    try {
-                                        JSONObject jsonObject = new JSONObject(responseData);
-                                        int code = Integer.parseInt(jsonObject.getString("code"));
-                                        if (code == 2) {
-                                            runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    pd.dismiss();
-                                                    Toast.makeText(MainActivity.this, "未知错误",
-                                                            Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
-
-                                        }else if(code==0){
-                                            runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    pd.dismiss();
-                                                    Toast.makeText(MainActivity.this, "绑定成功",
-                                                            Toast.LENGTH_SHORT).show();
-                                                    MainActivity.this.sID.setText("学号："+sID);
-                                                    user.setsID(sID);
-                                                }
-                                            });
-                                        }
-                                    }
-                                    catch(JSONException e){
-                                        pd.dismiss();
-                                        e.printStackTrace();
-                                    }
-                                }
-                            });
-                        }
-                    }
-                })
-                .setNegativeButton("取消", null)
-                .show();
     }
 
     @Override
@@ -599,8 +490,32 @@ public class MainActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             default:
-
+                return super.onOptionsItemSelected(item);
         }
         return true;
+    }
+
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==REQUEST_PERSONAL_INFO){
+            switch (resultCode){
+                case RESULT_UPDATE_SID:
+                    sidText.setText("学号："+user.getSid());
+                    break;
+                case  RESULT_UPDATE_PHONE:
+                    phoneText.setText("手机号："+user.getPhone());
+                    break;
+                case RESULT_UPDATE_ALL:
+                    sidText.setText("学号："+user.getSid());
+                    phoneText.setText("手机号："+user.getPhone());
+                    break;
+                default:
+
+                    break;
+            }
+        }
     }
 }

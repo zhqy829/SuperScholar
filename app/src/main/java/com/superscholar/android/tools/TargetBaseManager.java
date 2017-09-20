@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.CursorWrapper;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.superscholar.android.entity.TargetItem;
 
@@ -21,6 +22,8 @@ import java.util.UUID;
  */
 
 public class TargetBaseManager {
+
+    Context context;
 
     public class TargetBaseHelper extends SQLiteOpenHelper{
         private static final int VERSION=1;
@@ -167,7 +170,6 @@ public class TargetBaseManager {
                 }
             }
             targetItem.setWeekSignTimes(weekSignTimes);
-
             return targetItem;
         }
     }
@@ -190,6 +192,7 @@ public class TargetBaseManager {
 
     public TargetBaseManager(Context context){
         database=new TargetBaseHelper(context).getWritableDatabase();
+        this.context=context;
     }
 
     private ContentValues getContentValues(TargetItem targetItem){

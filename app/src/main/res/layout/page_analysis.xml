@@ -1,14 +1,205 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ScrollView
+        android:id="@+id/analysis_scroll_form"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:background="@drawable/analysis_form_bg"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_marginTop="20dp"
+                android:textColor="#000000"
+                android:gravity="center"
+                android:textSize="22sp"
+                android:text="本周报告"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/analysis_text_date"
+                android:layout_marginTop="7dp"
+                android:layout_marginRight="15dp"
+                android:gravity="right"
+                android:textSize="13sp"
+                tools:text="数据日期:2017/9/3-2017/9/9"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <com.github.mikephil.charting.charts.LineChart
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="10dp"
+                android:id="@+id/analysis_chart_event"
+                android:layout_width="match_parent"
+                android:layout_height="300dp"/>
+
+            <View
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:background="#C4C4C4"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"/>
+
+            <TableLayout
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:layout_marginTop="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:textSize="20sp"
+                    android:text="目标完成情况表"
+                    android:gravity="center"
+                    android:layout_weight="1"/>
+
+                <TableRow
+                    android:layout_marginTop="5dp">
+                    <TextView
+                        android:text="目标情况"
+                        android:textSize="20sp"
+                        android:layout_weight="1"
+                        android:gravity="center"/>
+                    <TextView
+                        android:text="数目"
+                        android:textSize="20sp"
+                        android:layout_weight="1"
+                        android:gravity="center"/>
+                    <TextView
+                        android:text="比例"
+                        android:textSize="20sp"
+                        android:layout_weight="1"
+                        android:gravity="center"/>
+                </TableRow>
+
+                <TableRow
+                    android:layout_marginTop="5dp">
+                    <TextView
+                        android:text="目标完成"
+                        android:textSize="16sp"
+                        android:layout_weight="1"
+                        android:gravity="center"/>
+                    <TextView
+                        android:id="@+id/analysis_text_aim_complete_num"
+                        tools:text="3"
+                        android:textSize="16sp"
+                        android:layout_weight="1"
+                        android:gravity="center"/>
+                    <TextView
+                        android:id="@+id/analysis_text_aim_complete_scale"
+                        tools:text="60%"
+                        android:textSize="16sp"
+                        android:layout_weight="1"
+                        android:gravity="center"/>
+                </TableRow>
+
+                <TableRow
+                    android:layout_marginTop="5dp">
+                    <TextView
+                        android:text="目标未完成"
+                        android:textSize="16sp"
+                        android:layout_weight="1"
+                        android:gravity="center"/>
+                    <TextView
+                        android:id="@+id/analysis_text_aim_incomplete_num"
+                        tools:text="2"
+                        android:textSize="16sp"
+                        android:layout_weight="1"
+                        android:gravity="center"/>
+                    <TextView
+                        android:id="@+id/analysis_text_aim_incomplete_scale"
+                        tools:text="40%"
+                        android:textSize="16sp"
+                        android:layout_weight="1"
+                        android:gravity="center"/>
+                </TableRow>
+
+                <TableRow
+                    android:layout_marginTop="5dp">
+                    <TextView
+                        android:text="总数"
+                        android:textSize="16sp"
+                        android:layout_weight="1"
+                        android:gravity="center"/>
+                    <TextView
+                        android:id="@+id/analysis_text_aim_total_num"
+                        tools:text="5"
+                        android:textSize="16sp"
+                        android:layout_weight="1"
+                        android:gravity="center"/>
+                    <TextView
+                        android:id="@+id/analysis_text_aim_total_scale"
+                        tools:text="100%"
+                        android:textSize="16sp"
+                        android:layout_weight="1"
+                        android:gravity="center"/>
+                </TableRow>
+
+            </TableLayout>
+
+            <TextView
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:layout_marginTop="5dp"
+                android:textSize="12sp"
+                android:text="注:目标完成是指若一个目标的周打卡次数大于等于设定次数则认为目标完成，否则视为目标未完成。"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <View
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:background="#C4C4C4"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"/>
+
+            <TextView
+                android:text="总评"
+                android:textSize="20sp"
+                android:gravity="center"
+                android:layout_marginTop="15dp"
+                android:layout_marginLeft="14dp"
+                android:layout_marginRight="14dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/analysis_text_summary"
+                android:textSize="16sp"
+                android:layout_marginTop="8dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="40dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="分析页面"
-        android:textSize="30dp" />
+        android:id="@+id/analysis_text_hint"
+        android:visibility="gone"
+        android:gravity="center"
+        android:text="暂无周报数据\n请点击右上角菜单获取周报"
+        android:textSize="30sp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </RelativeLayout>
+
+
+

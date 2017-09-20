@@ -144,9 +144,10 @@ public class Date implements Parcelable,Cloneable,Serializable{
     }
 
     //获取当前日期对象的时间戳
-    private long getTimestamp(){
+    public long getTimestamp(){
         Calendar calendar=Calendar.getInstance();
-        calendar.set(year,month-1,day);
+        calendar.set(year,month-1,day,0,0,0);
+        calendar.set(Calendar.MILLISECOND,0);
         return calendar.getTimeInMillis();
     }
 
@@ -195,9 +196,7 @@ public class Date implements Parcelable,Cloneable,Serializable{
     //Date转字符串日期
     @Override
     public String toString() {
-        String dateStr;
-        dateStr=String.valueOf(year)+"-"+String.valueOf(month)+"-"+String.valueOf(day);
-        return dateStr;
+        return String.format("%04d-%02d-%02d",year,month,day);
     }
 
     @Override

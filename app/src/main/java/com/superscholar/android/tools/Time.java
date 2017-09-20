@@ -51,6 +51,29 @@ public class Time implements Parcelable {
         this.min = min;
     }
 
+    public int getTimeDifference(Time time){
+        int a=hour*60+min;
+        int b=time.hour*60+time.min;
+        return a>b?a-b:b-a;
+    }
+
+    public long getTimestamp(){
+       return hour*60*60*1000+min*60*1000;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%02d:%02d",hour,min);
+    }
+
+    public static Time parseTime(String time){
+        Time t=new Time();
+        String []array=time.split(":");
+        t.hour=Integer.parseInt(array[0]);
+        t.min=Integer.parseInt(array[1]);
+        return t;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -76,4 +99,5 @@ public class Time implements Parcelable {
             return new Time[size];
         }
     };
+
 }

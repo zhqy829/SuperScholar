@@ -21,11 +21,14 @@ import android.widget.Toast;
 import com.shinelw.library.ColorArcProgressBar;
 import com.superscholar.android.R;
 import com.superscholar.android.control.BaseActivity;
+import com.superscholar.android.entity.User;
 import com.superscholar.android.service.ConcentrationService;
 import com.superscholar.android.activity.ConcentrationRuleActivity;
 import com.superscholar.android.tools.EncryptionDevice;
+import com.superscholar.android.tools.UserLib;
 
 import static android.content.Context.BIND_AUTO_CREATE;
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * Created by zhqy on 2017/6/14.
@@ -54,6 +57,7 @@ public class ConcentrationTimeFragment extends Fragment{
                         BaseActivity.stopEnterBackgroundListening();
                         errorText.setTextColor(Color.parseColor("#1C86EE"));
                         errorText.setText("本次专心时间已满120分钟，计时结束，获得"+String.valueOf(70)+"学分绩");
+                        obtainCurrency(4);
                         // TODO: 2017/6/24
                         //学分绩变化
                         errorText.setVisibility(View.VISIBLE);
@@ -122,8 +126,15 @@ public class ConcentrationTimeFragment extends Fragment{
                             }).show();
                 } else {
                     int obtainGrade=55;
-                    if(concentrationMin>=90) obtainGrade=65;
-                    else if(concentrationMin>=60) obtainGrade=60;
+                    if(concentrationMin>=90) {
+                        obtainGrade=65;
+                        obtainCurrency(3);
+                    } else if(concentrationMin>=60) {
+                        obtainGrade=60;
+                        obtainCurrency(2);
+                    }else{
+                        obtainCurrency(1);
+                    }
                     isTimeStart=false;
                     binder.stopConcentrationService();
                     BaseActivity.stopEnterBackgroundListening();
@@ -167,9 +178,18 @@ public class ConcentrationTimeFragment extends Fragment{
                 isTimeStart=false;
                 errorText.setTextColor(Color.parseColor("#FF0000"));
                 int obtainGrade=0;
-                if(concentrationMin>=90) obtainGrade=65;
-                else if(concentrationMin>=60) obtainGrade=60;
-                else if(concentrationMin>=30) obtainGrade=55;
+                if(concentrationMin>=90){
+                    obtainGrade=65;
+                    obtainCurrency(3);
+                }
+                else if(concentrationMin>=60) {
+                    obtainGrade=60;
+                    obtainCurrency(2);
+                }
+                else if(concentrationMin>=30) {
+                    obtainGrade=55;
+                    obtainCurrency(1);
+                }
                 errorText.setText("软件进入后台，计时停止，专心时间"+String.valueOf(concentrationMin)+
                         "分钟，获得"+String.valueOf(obtainGrade)+"学分绩");
                 errorText.setVisibility(View.VISIBLE);
@@ -184,6 +204,16 @@ public class ConcentrationTimeFragment extends Fragment{
     private void initCurrencyBase(){
         SharedPreferences pref=getActivity().getSharedPreferences("data_currency",0);
         currencyBase=pref.getInt("currencyBase",0);
+    }
+
+    //获得奖励币
+    private void obtainCurrency(int multiple){
+        User user= UserLib.getInstance().getUser();
+        user.setCurrencyAmount(user.getCurrencyAmount()+multiple*currencyBase);
+        SharedPreferences pref=getActivity().getSharedPreferences("data_currency",MODE_PRIVATE);
+        SharedPreferences.Editor editor=pref.edit();
+        editor.putInt("currencyAmount",user.getCurrencyAmount());
+        editor.apply();
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

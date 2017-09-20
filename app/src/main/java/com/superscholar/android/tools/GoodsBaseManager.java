@@ -10,7 +10,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.superscholar.android.entity.ConsumptionDetail;
 import com.superscholar.android.entity.Goods;
 
-import org.apache.http.params.CoreConnectionPNames;
 
 import java.util.ArrayList;
 import java.util.List;

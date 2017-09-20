@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:text="请选择是否开启成绩提醒功能，开启后当您有新的成绩出来时，将会以短信的形式发送到您绑定的手机上。开启该功能后，请确保您绑定的学号以及数字石大密码正确，否则该功能将被关闭。"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:textSize="16sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+
+    <RadioGroup
+        android:orientation="horizontal"
+        android:layout_margin="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:layout_marginRight="10dp"
+            android:gravity="center"
+            android:id="@+id/grade_remind_button_on"
+            android:text="开启"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+
+        <RadioButton
+            android:layout_marginLeft="10dp"
+            android:gravity="center"
+            android:id="@+id/grade_remind_button_off"
+            android:text="关闭"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+
+    </RadioGroup>
+
+</LinearLayout>

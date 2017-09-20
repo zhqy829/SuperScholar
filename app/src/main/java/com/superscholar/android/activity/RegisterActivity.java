@@ -3,23 +3,28 @@ package com.superscholar.android.activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.os.CountDownTimer;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
 import java.util.regex.*;
 
+import com.superscholar.android.entity.User;
 import com.superscholar.android.tools.ActivityCollector;
 import com.superscholar.android.control.BaseActivity;
 import com.superscholar.android.tools.EncryptionDevice;
-import com.superscholar.android.tools.ServerConnection;
 import com.superscholar.android.R;
+import com.superscholar.android.tools.ServerConnector;
+import com.superscholar.android.tools.UserLib;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -30,19 +35,23 @@ import okhttp3.Response;
 
 public class RegisterActivity extends BaseActivity {
 
-    private TextView usernameEdit;
-    private TextView passwordEdit;
-    private TextView cpasswordEdit;
-    private TextView emailEdit;
-    private TextView sIDEdit;
+    private EditText usernameEdit;
+    private EditText passwordEdit;
+    private EditText cpasswordEdit;
+    private EditText phoneEdit;
+    private EditText verifyEdit;
+
+    private Button verifyButton;
+
+    private CountDownTimer timer;
 
     //变量初始化
     private void initVariable(){
-        usernameEdit=(TextView)findViewById(R.id.register_usernameEdit);
-        passwordEdit=(TextView)findViewById(R.id.register_passwordEdit);
-        cpasswordEdit=(TextView)findViewById(R.id.register_cpasswordEdit);
-        emailEdit=(TextView)findViewById(R.id.register_emailEdit);
-        sIDEdit=(TextView)findViewById(R.id.register_sIDEdit);
+        usernameEdit=(EditText)findViewById(R.id.register_usernameEdit);
+        passwordEdit=(EditText)findViewById(R.id.register_passwordEdit);
+        cpasswordEdit=(EditText)findViewById(R.id.register_cpasswordEdit);
+        phoneEdit=(EditText)findViewById(R.id.register_phoneEdit);
+        verifyEdit=(EditText)findViewById(R.id.register_verifyEdit);
     }
 
     //菜单栏初始化
@@ -56,12 +65,30 @@ public class RegisterActivity extends BaseActivity {
         }
     }
 
+    //初始化倒计时
+    private void initTimer(){
+        timer=new CountDownTimer(60000,1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                verifyButton.setText(""+millisUntilFinished/1000+"s");
+            }
+
+            @Override
+            public void onFinish() {
+                verifyButton.setText("获取验证码");
+                verifyButton.setEnabled(true);
+                verifyButton.setBackgroundColor(Color.parseColor("#1C86EE"));
+            }
+        };
+    }
+
     //输入合法性检测 合法返回true 不合法返回false
     private boolean inputValidityCheck(){
         String username=usernameEdit.getText().toString();
         String password=passwordEdit.getText().toString();
         String cpassword=cpasswordEdit.getText().toString();
-        String email=emailEdit.getText().toString();
+        String phone=phoneEdit.getText().toString();
+        String verify=verifyEdit.getText().toString();
 
         if(username.equals("")){
             Toast.makeText(RegisterActivity.this,"用户名不能为空",Toast.LENGTH_SHORT).show();
@@ -72,8 +99,11 @@ public class RegisterActivity extends BaseActivity {
         }else if(cpassword.equals("")){
             Toast.makeText(RegisterActivity.this,"确认密码不能为空",Toast.LENGTH_SHORT).show();
             return false;
-        }else if(email.equals("")){
-            Toast.makeText(RegisterActivity.this,"邮箱不能为空",Toast.LENGTH_SHORT).show();
+        }else if(phone.equals("")){
+            Toast.makeText(RegisterActivity.this,"手机号不能为空",Toast.LENGTH_SHORT).show();
+            return false;
+        }else if(verify.equals("")){
+            Toast.makeText(RegisterActivity.this,"验证码不能为空",Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -82,11 +112,11 @@ public class RegisterActivity extends BaseActivity {
             return false;
         }
 
-        String regex="\\p{Alnum}{1,}@\\p{Alnum}{1,}.[a-z]{1,}";
+        String regex="1\\d{10,10}";
         Pattern pattern=Pattern.compile(regex);
-        Matcher matcher=pattern.matcher(email);
-        if(!matcher.matches()){
-            Toast.makeText(RegisterActivity.this,"邮箱格式错误",Toast.LENGTH_SHORT).show();
+        Matcher matcher=pattern.matcher(phone);
+        if(phone.length()!=11||!matcher.matches()){
+            Toast.makeText(RegisterActivity.this,"手机格式错误",Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -95,6 +125,72 @@ public class RegisterActivity extends BaseActivity {
 
     //按钮初始化
     private void initButton(){
+        verifyButton=(Button)findViewById(R.id.register_verifyButton);
+        verifyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String username=usernameEdit.getText().toString();
+                String phone=phoneEdit.getText().toString();
+                if(username.equals("")){
+                    Toast.makeText(RegisterActivity.this,"请填写用户名",Toast.LENGTH_SHORT).show();
+                }else if(phone.equals("")){
+                    Toast.makeText(RegisterActivity.this,"请填写手机号",Toast.LENGTH_SHORT).show();
+                }else{
+                    ServerConnector.getInstance().sendRegisterShortMsg(username, phone, new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(RegisterActivity.this,"网络异常，发送失败",Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                            String resp =response.body().string();
+                            JSONObject jsonObject= null;
+                            try {
+                                jsonObject = new JSONObject(resp);
+                                int code =jsonObject.getInt("code");
+                                if(code!=1){
+                                    final String message=jsonObject.getString("message");
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(RegisterActivity.this,message,Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                }else{
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(RegisterActivity.this,"发送成功",Toast.LENGTH_SHORT).show();
+                                            verifyButton.setEnabled(false);
+                                            verifyButton.setBackgroundColor(Color.GRAY);
+                                            verifyButton.setText("60s");
+                                            timer.start();
+                                        }
+                                    });
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(RegisterActivity.this,"发送异常",Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+                            }
+
+                        }
+                    });
+                }
+            }
+        });
+
+
         Button registerButton=(Button)findViewById(R.id.register_registerButton);
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,79 +201,112 @@ public class RegisterActivity extends BaseActivity {
                     pd.setMessage("正在注册，请稍候...");
                     pd.setCancelable(false);
                     pd.show();
-                    ServerConnection.sendRegisterMsg(usernameEdit.getText().toString(),
-                            passwordEdit.getText().toString(), emailEdit.getText().toString(),
-                            sIDEdit.getText().toString(), new Callback() {
+                    ServerConnector.getInstance().checkVarify(usernameEdit.getText().toString(),
+                            verifyEdit.getText().toString(), new Callback() {
                                 @Override
                                 public void onFailure(Call call, IOException e) {
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
                                             pd.dismiss();
-                                            Toast.makeText(RegisterActivity.this,"网络异常，请检查网络设置",
-                                                    Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(RegisterActivity.this,"网络异常，请检查网络设置",Toast.LENGTH_SHORT).show();
                                         }
                                     });
                                 }
 
                                 @Override
                                 public void onResponse(Call call, Response response) throws IOException {
-                                    String responseData =response.body().string();
-                                    try{
-                                        JSONObject jsonObject=new JSONObject(responseData);
-                                        int code =Integer.parseInt(jsonObject.getString("code"));
-                                        //存在code，失败的返回
-                                        if(code==1){
+                                    String resp=response.body().string();
+                                    JSONObject jsonObject= null;
+                                    try {
+                                        jsonObject = new JSONObject(resp);
+                                        int code =jsonObject.getInt("code");
+                                        if(code!=1){
+                                            final String message=jsonObject.getString("message");
                                             runOnUiThread(new Runnable() {
                                                 @Override
                                                 public void run() {
                                                     pd.dismiss();
-                                                    Toast.makeText(RegisterActivity.this,"用户名已存在",
-                                                            Toast.LENGTH_SHORT).show();
+                                                    Toast.makeText(RegisterActivity.this,message,Toast.LENGTH_SHORT).show();
                                                 }
                                             });
-                                        } else if(code==2){
-                                            runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    pd.dismiss();
-                                                    Toast.makeText(RegisterActivity.this,"邮箱已被注册",
-                                                            Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
-                                        }else if(code==3){
-                                            runOnUiThread(new Runnable() {
-                                                @Override
-                                                public void run() {
-                                                    pd.dismiss();
-                                                    Toast.makeText(RegisterActivity.this,"未知错误，请联系开发人员",
-                                                            Toast.LENGTH_SHORT).show();
-                                                }
-                                            });
+                                        }else{
+                                            ServerConnector.getInstance().sendRegisterMsg(usernameEdit.getText().toString(),
+                                                    passwordEdit.getText().toString(), phoneEdit.getText().toString(), new Callback() {
+                                                        @Override
+                                                        public void onFailure(Call call, IOException e) {
+                                                            runOnUiThread(new Runnable() {
+                                                                @Override
+                                                                public void run() {
+                                                                    pd.dismiss();
+                                                                    Toast.makeText(RegisterActivity.this,"网络异常，请检查网络设置",
+                                                                            Toast.LENGTH_SHORT).show();
+                                                                }
+                                                            });
+                                                        }
+
+                                                        @Override
+                                                        public void onResponse(Call call, Response response) throws IOException {
+                                                            String responseData =response.body().string();
+                                                            try{
+                                                                final JSONObject jsonObject=new JSONObject(responseData);
+                                                                int code =jsonObject.getInt("code");
+                                                                if(code!=1){
+                                                                    final String message=jsonObject.getString("message");
+                                                                    runOnUiThread(new Runnable() {
+                                                                        @Override
+                                                                        public void run() {
+                                                                            pd.dismiss();
+                                                                            Toast.makeText(RegisterActivity.this,message,Toast.LENGTH_SHORT).show();
+                                                                        }
+                                                                    });
+                                                                }else{
+                                                                    runOnUiThread(new Runnable() {
+                                                                        @Override
+                                                                        public void run() {
+                                                                            pd.dismiss();
+                                                                            double grade= 0;
+                                                                            try {
+                                                                                String userString=jsonObject.getString("user");
+                                                                                JSONObject userObject=new JSONObject(userString);
+                                                                                grade = userObject.getDouble("grade");
+                                                                            } catch (JSONException e) {
+                                                                                e.printStackTrace();
+                                                                            }
+                                                                            User user= UserLib.getInstance().getUser();
+                                                                            user.setUsername(usernameEdit.getText().toString());
+                                                                            user.setPassword(passwordEdit.getText().toString());
+                                                                            user.setGrade(grade);
+                                                                            user.setPhone(phoneEdit.getText().toString());
+                                                                            user.setSpwd(null);
+                                                                            user.setSid(null);
+                                                                            Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                                                                            saveUPInFile(usernameEdit.getText().toString(),
+                                                                                    passwordEdit.getText().toString());
+                                                                            ActivityCollector.finishAll();
+                                                                            startActivity(intent);
+                                                                        }
+                                                                    });
+                                                                }
+                                                            }catch(JSONException e){
+                                                                e.printStackTrace();
+                                                                runOnUiThread(new Runnable() {
+                                                                    @Override
+                                                                    public void run() {
+                                                                        pd.dismiss();
+                                                                        Toast.makeText(RegisterActivity.this,"注册异常",Toast.LENGTH_SHORT).show();
+                                                                    }
+                                                                });
+
+                                                            }
+                                                        }
+                                                    });
                                         }
-                                    }catch(JSONException e){
-                                        try{
-                                            pd.dismiss();
-                                            JSONObject jsonObject=new JSONObject(responseData);
-                                            String grade=jsonObject.getString("grade");
-                                            Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                                            intent.putExtra("username",usernameEdit.getText().toString());
-                                            intent.putExtra("password",passwordEdit.getText().toString());
-                                            intent.putExtra("grade",grade);
-                                            intent.putExtra("email",emailEdit.getText().toString());
-                                            if(sIDEdit.getText().toString().equals("")){
-                                                intent.putExtra("sID","null");
-                                            }else{
-                                                intent.putExtra("sID",sIDEdit.getText().toString());
-                                            }
-                                            saveUPInFile(usernameEdit.getText().toString(),
-                                                    passwordEdit.getText().toString());
-                                            ActivityCollector.finishAll();
-                                            startActivity(intent);
-                                        }catch (JSONException ex){
-                                            ex.printStackTrace();
-                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                        Toast.makeText(RegisterActivity.this,"注册异常",Toast.LENGTH_SHORT).show();
                                     }
+
                                 }
                             });
                 }
@@ -200,6 +329,7 @@ public class RegisterActivity extends BaseActivity {
 
         initVariable();
         initToolbar();
+        initTimer();
         initButton();
     }
 

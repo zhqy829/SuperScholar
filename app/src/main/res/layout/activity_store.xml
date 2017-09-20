@@ -41,7 +41,7 @@
         android:visibility="gone"
         android:textSize="30sp"
         android:gravity="center"
-        android:text="还没有商品哦，创建一个吧"
+        android:text="还没有商品哦\n创建一个吧"
         android:id="@+id/store_hintText"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -52,7 +52,8 @@
         android:layout_marginRight="13dp"/>
 
     <TextView
-        android:text="奖励币:10000"
+        android:id="@+id/store_text_currency"
+        tools:text="奖励币:10000"
         android:textSize="12sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

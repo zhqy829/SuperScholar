@@ -3,9 +3,11 @@ package com.superscholar.android.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -19,13 +21,16 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.superscholar.android.R;
+import com.superscholar.android.activity.ClassroomActivity;
+import com.superscholar.android.activity.ScoreActivity;
 import com.superscholar.android.entity.News;
 import com.superscholar.android.holder.NetworkImageHolderView;
 import com.superscholar.android.holder.NewsBannerHolderView;
-import com.superscholar.android.tools.ServerConnection;
 import com.superscholar.android.activity.ImageViewActivity;
 import com.superscholar.android.activity.MemoActivity;
 import com.superscholar.android.activity.WebActivity;
+import com.superscholar.android.tools.ServerConnector;
+import com.superscholar.android.tools.UserLib;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,13 +52,13 @@ import okhttp3.Response;
 public class IntegratedFragment extends Fragment{
     private List<String> networkImages;  //网络图片库url
     private String[] images = {
-            ServerConnection.getBannerImageUrl(1),
-            ServerConnection.getBannerImageUrl(2),
-            ServerConnection.getBannerImageUrl(3),
-            ServerConnection.getBannerImageUrl(4),
-            ServerConnection.getBannerImageUrl(5),
-            ServerConnection.getBannerImageUrl(6),
-            ServerConnection.getBannerImageUrl(7)
+            ServerConnector.getInstance().getBannerImageUrl(1),
+            ServerConnector.getInstance().getBannerImageUrl(2),
+            ServerConnector.getInstance().getBannerImageUrl(3),
+            ServerConnector.getInstance().getBannerImageUrl(4),
+            ServerConnector.getInstance().getBannerImageUrl(5),
+            ServerConnector.getInstance().getBannerImageUrl(6),
+            ServerConnector.getInstance().getBannerImageUrl(7)
     };
     private ConvenientBanner pictureBanner;  //综合界面图片Banner
     private ConvenientBanner newsBanner;   //综合界面新闻Banner
@@ -68,6 +73,40 @@ public class IntegratedFragment extends Fragment{
             public void onClick(View view) {
                 Intent intent=new Intent(getActivity(),MemoActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        Button gradeButton=(Button) view.findViewById(R.id.integrated_grade_button);
+        gradeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(UserLib.getInstance().getUser().getSid()==null||UserLib.getInstance().getUser().getSpwd()==null){
+                    Toast.makeText(getActivity(),"您尚未绑定学号，绑定学号后该功能才可使用哦",Toast.LENGTH_SHORT).show();
+                }else{
+                    Intent intent=new Intent(getActivity(), ScoreActivity.class);
+                    startActivity(intent);
+                }
+            }
+        });
+
+        Button classroomButton=(Button)view.findViewById(R.id.integrated_classroom_button);
+        classroomButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(getActivity(), ClassroomActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        ImageButton timetableButton=(ImageButton)view.findViewById(R.id.integrated_timetable_button);
+        timetableButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(UserLib.getInstance().getUser().getSid()==null||UserLib.getInstance().getUser().getSpwd()==null){
+                    Toast.makeText(getActivity(),"您尚未绑定学号，绑定学号后该功能才可使用哦",Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(getActivity(),"该功能尚未开放，敬请期待",Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -101,7 +140,7 @@ public class IntegratedFragment extends Fragment{
         newsBanner=(ConvenientBanner)view.findViewById(R.id.integrated_newsBanner);
 
         //获取新闻数据
-        ServerConnection.connectNewsAPI(new Callback() {
+        ServerConnector.getInstance().connectNewsAPI(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 getActivity().runOnUiThread(new Runnable() {

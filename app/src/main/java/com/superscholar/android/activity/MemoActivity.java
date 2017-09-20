@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import toan.android.floatingactionmenu.FloatingActionsMenu;
+
 import com.superscholar.android.R;
 import com.superscholar.android.entity.MemoItem;
 import com.superscholar.android.control.BaseActivity;

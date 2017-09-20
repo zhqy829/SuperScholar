@@ -26,14 +26,14 @@
     </android.support.v7.widget.Toolbar>
 
     <ListView
-        android:layout_below="@+id/setting_toolbar"
+        android:layout_below="@id/setting_toolbar"
         android:layout_marginTop="10dp"
         android:id="@+id/setting_menuList"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 
     <View
-        android:layout_below="@+id/setting_toolbar"
+        android:layout_below="@id/setting_toolbar"
         android:layout_marginTop="10dp"
         android:background="#EBEBEB"
         android:layout_width="match_parent"

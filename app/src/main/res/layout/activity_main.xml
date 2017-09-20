@@ -58,7 +58,7 @@
             android:background="?attr/colorPrimary">
 
             <TextView
-                android:id="@+id/slidingMenu_header_sID"
+                android:id="@+id/slidingMenu_header_sid"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
@@ -70,13 +70,13 @@
                 android:id="@+id/slidingMenu_header_grade"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@id/slidingMenu_header_sID"
+                android:layout_above="@id/slidingMenu_header_sid"
                 android:textColor="#FFF"
                 android:textSize="16sp"
                 android:layout_marginBottom="10dp"/>
 
             <TextView
-                android:id="@+id/slidingMenu_header_email"
+                android:id="@+id/slidingMenu_header_phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@id/slidingMenu_header_grade"
@@ -88,7 +88,7 @@
                 android:id="@+id/slidingMenu_header_username"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@id/slidingMenu_header_email"
+                android:layout_above="@id/slidingMenu_header_phone"
                 android:textColor="#FFF"
                 android:textSize="16sp"
                 android:layout_marginBottom="10dp"/>

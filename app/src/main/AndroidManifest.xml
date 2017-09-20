@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.superscholar.android"
     android:versionCode="1"
-    android:versionName="0.1.0">
+    android:versionName="1.0.0">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.GET_TASKS" />
@@ -92,7 +92,17 @@
         <activity android:name=".activity.StoreActivity" />
         <activity android:name=".activity.GoodsCreateActivity" />
         <activity android:name=".activity.GoodsUpdateActivity" />
-        <activity android:name=".activity.GoodsConsumptionDetailActivity"></activity>
+        <activity android:name=".activity.GoodsConsumptionDetailActivity" />
+        <activity android:name=".activity.TimeAxisActivity" />
+        <activity android:name=".activity.EventChartActivity" />
+        <activity android:name=".activity.EventHelpActivity" />
+        <activity android:name=".activity.PersonalInfoActivity" />
+        <activity android:name=".activity.BindSidActivity" />
+        <activity android:name=".activity.BindPhoneActivity" />
+        <activity android:name=".activity.ForgetPasswordActivity" />
+        <activity android:name=".activity.ForgetSetPasswordActivity" />
+        <activity android:name=".activity.ScoreActivity" />
+        <activity android:name=".activity.ClassroomActivity"></activity>
     </application>
 
 </manifest>

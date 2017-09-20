@@ -1,9 +1,12 @@
 package com.superscholar.android.activity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,10 +14,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.superscholar.android.control.BaseActivity;
+import com.superscholar.android.entity.User;
 import com.superscholar.android.tools.EncryptionDevice;
-import com.superscholar.android.tools.LogUtil;
-import com.superscholar.android.tools.ServerConnection;
 import com.superscholar.android.R;
+import com.superscholar.android.tools.ServerConnector;
+import com.superscholar.android.tools.UserLib;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,6 +28,7 @@ import java.io.IOException;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
+import okhttp3.internal.framed.Header;
 
 public class LoginActivity extends BaseActivity {
 
@@ -75,7 +80,8 @@ public class LoginActivity extends BaseActivity {
         forgetPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(LoginActivity.this,"忘记密码",Toast.LENGTH_SHORT).show();
+                Intent intent=new Intent(LoginActivity.this,ForgetPasswordActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -96,7 +102,7 @@ public class LoginActivity extends BaseActivity {
         pd.setMessage("登录中，请稍候...");
         pd.setCancelable(false);
         pd.show();
-        ServerConnection.sendLoginMsg(username, password, new Callback() {
+        ServerConnector.getInstance().sendLoginMsg(username, password, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 runOnUiThread(new Runnable() {
@@ -144,15 +150,28 @@ public class LoginActivity extends BaseActivity {
                         pd.dismiss();
                         JSONObject jsonObject=new JSONObject(responseData);
                         String grade=jsonObject.getString("grade");
-                        String email=jsonObject.getString("email");
-                        String sID=jsonObject.getString("studentId");
+                        String phone=jsonObject.getString("phone");
+                        String sid=jsonObject.getString("studentId");
+                        if(sid.equals("null")) sid=null;
+                        String spwd=jsonObject.getString("ipassword");
+                        if(spwd.equals("null")) spwd=null;
+                        Boolean remind=jsonObject.getBoolean("remind");
+                        SharedPreferences pref=getSharedPreferences("data_currency",0);
+                        int currencyAmount=pref.getInt("currencyAmount",0);
+
+                        User user= UserLib.getInstance().getUser();
+                        user.setUsername(username);
+                        user.setPassword(password);
+                        user.setGrade(Double.parseDouble(grade));
+                        user.setPhone(phone);
+                        user.setSid(sid);
+                        user.setSpwd(spwd);
+                        user.setRemind(remind);
+                        user.setCurrencyAmount(currencyAmount);
+
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        intent.putExtra("username",username);
-                        intent.putExtra("password",password);
-                        intent.putExtra("grade",grade);
-                        intent.putExtra("email",email);
-                        intent.putExtra("sID",sID);
                         startActivity(intent);
+
                         finish();
                         saveUPInFile(username,password);
                         fileStatus=true;
@@ -186,11 +205,12 @@ public class LoginActivity extends BaseActivity {
         SharedPreferences pref=getSharedPreferences("data_up",0);
         SharedPreferences.Editor editor=pref.edit();
         String username=pref.getString("username","");
-        String password=pref.getString("password","");
+        String encodedPassword=pref.getString("password","");
+        String password=EncryptionDevice.decipher(encodedPassword);
         if(!(username.equals("")&&password.equals(""))){
             usernameEdit.setText(username);
             passwordEdit.setText(password);
-            logonValidate(username, EncryptionDevice.decipher(password));
+            logonValidate(username, password);
             if(!fileStatus){
                 editor.clear();
                 editor.apply();

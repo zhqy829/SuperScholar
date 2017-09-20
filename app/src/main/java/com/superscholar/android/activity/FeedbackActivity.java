@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import com.superscholar.android.R;
 import com.superscholar.android.control.BaseActivity;
-import com.superscholar.android.tools.ServerConnection;
+import com.superscholar.android.tools.ServerConnector;
 import com.superscholar.android.tools.UserLib;
 
 import org.json.JSONException;
@@ -79,7 +79,7 @@ public class FeedbackActivity extends BaseActivity {
                 pd.setMessage("正在提交，请稍候...");
                 pd.setCancelable(false);
                 pd.show();
-                ServerConnection.sendUserFeedback(username, type, detail, contact, new Callback() {
+                ServerConnector.getInstance().sendUserFeedback(username, type, detail, contact, new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
                         pd.dismiss();
