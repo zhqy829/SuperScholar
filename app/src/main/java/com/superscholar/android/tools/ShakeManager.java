@@ -65,6 +65,8 @@ public class ShakeManager implements SensorEventListener {
             sensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
             handler = new Handler(){
+
+                @Override
                 public void handleMessage(Message msg){
                     if(!isStart)return;
                     if(listener==null) ShakeManager.this.stop();

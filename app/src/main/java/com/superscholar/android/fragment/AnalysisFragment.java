@@ -346,7 +346,6 @@ public class AnalysisFragment extends Fragment{
 
                     summary=MessageFormat.format(ptn,p0,p1,p2,p3,p4,p5,p6,p7);
 
-
                     saveDataToCache();
 
                     getActivity().runOnUiThread(new Runnable() {

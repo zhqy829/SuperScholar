@@ -219,6 +219,7 @@ public class Date implements Parcelable,Cloneable,Serializable{
             date.month=source.readInt();
             date.day=source.readInt();
             return date;
+
         }
 
         @Override

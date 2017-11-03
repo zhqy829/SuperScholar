@@ -41,6 +41,7 @@ import com.superscholar.android.fragment.TargetFragment;
 import com.superscholar.android.control.BaseActivity;
 import com.superscholar.android.R;
 
+import com.superscholar.android.tools.Date;
 import com.superscholar.android.tools.ServerConnector;
 import com.superscholar.android.tools.UserLib;
 

@@ -1,6 +1,5 @@
 package com.superscholar.android.activity;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.webkit.WebView;
@@ -28,7 +27,6 @@ public class WebActivity extends BaseActivity {
 
         initWebView();
     }
-
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack()) {
