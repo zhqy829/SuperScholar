@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
  * Created by zhqy on 2017/6/17.
  */
 
-public class Date implements Parcelable,Cloneable,Serializable{
+public class Date implements Parcelable, Cloneable, Serializable {
 
     private int year;
     private int month;
@@ -63,7 +63,7 @@ public class Date implements Parcelable,Cloneable,Serializable{
 
     //日期时间字符串转DateTime
     public static Date parseDate(String dateString){
-        String regex="\\d{1,}";
+        String regex="\\d+";
         int []date=new int[3];
         Pattern p=Pattern.compile(regex);
         Matcher m=p.matcher(dateString);

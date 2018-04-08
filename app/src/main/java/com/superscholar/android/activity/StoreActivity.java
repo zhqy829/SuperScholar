@@ -62,7 +62,7 @@ public class StoreActivity extends BaseActivity {
 
     //初始化商品数据
     private void initGoodsBaseManager(){
-        manager=new GoodsBaseManager(StoreActivity.this);
+        manager=new GoodsBaseManager(getApplicationContext());
         goodsList=manager.getGoodsList();
 
         if(goodsList.size()==0){

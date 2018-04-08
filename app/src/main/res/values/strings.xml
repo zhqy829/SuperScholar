@@ -2,7 +2,7 @@
     <string name="app_name">学霸修炼之路</string>
     <string name="forget_password"><u>忘记密码？</u></string>
     <string name="register_account"><u>注册新帐号</u></string>
-    <string name="concentration_hint">注：开始计时后将扣除**学分绩。停止后，
+    <string name="concentration_hint">注：开始计时后将扣除3学分绩。停止后，
         按照【学分绩返还规则】返还相应学分绩。
         请注意，计时过程中请保持程序在前台运行（允许锁屏）且不要退出登录。</string>
     <string name="oncentration_rule"><u>学分绩返还规则</u></string>

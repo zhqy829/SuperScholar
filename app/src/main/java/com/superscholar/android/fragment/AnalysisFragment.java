@@ -34,6 +34,7 @@ import com.superscholar.android.R;
 import com.superscholar.android.activity.BindPhoneActivity;
 import com.superscholar.android.entity.EventItem;
 import com.superscholar.android.entity.TargetItem;
+import com.superscholar.android.tools.CreditDir;
 import com.superscholar.android.tools.Date;
 import com.superscholar.android.tools.EventBaseManager;
 import com.superscholar.android.tools.ServerConnector;
@@ -81,7 +82,7 @@ public class AnalysisFragment extends Fragment{
 
     //变量初始化
     private void initVariable(View view){
-        manager=new EventBaseManager(getActivity());
+        manager=new EventBaseManager(getActivity().getApplicationContext());
 
         formView=(ScrollView)view.findViewById(R.id.analysis_scroll_form);
         hintText=(TextView)view.findViewById(R.id.analysis_text_hint);
@@ -284,9 +285,27 @@ public class AnalysisFragment extends Fragment{
             }
         }
 
+        double credit = 0;
+        for(int i = 0;i < 7;i++){
+            credit = credit + (investMinData[i] / 60) * CreditDir.Event.INVEST_PER_HOUR;
+            if(regularMinData[i] / 60 > 3){
+                credit = credit + (regularMinData[i] / 60) * CreditDir.Event.REGULAR_PER_HOUR;
+            }
+            if(sleepMinData[i] / 60 > 12){
+                credit = credit + (sleepMinData[i] / 60) * CreditDir.Event.SLEEP_PER_HOUR;
+            }
+            if(wasteMinData[i] / 60 > 6){
+                credit = credit + (wasteMinData[i] / 60) * CreditDir.Event.REGULAR_PER_HOUR;
+            }
+        }
+
+        ServerConnector.getInstance().sendGradeChange(UserLib.getInstance().getUser().getUsername(),
+                credit, "事件记录结算");
+        UserLib.getInstance().getUser().gradeChange(credit);
+
         aimNum=new int[3];
 
-        TargetBaseManager targetBaseManager=new TargetBaseManager(getActivity());
+        TargetBaseManager targetBaseManager=new TargetBaseManager(getActivity().getApplicationContext());
         List<TargetItem>targetItems=targetBaseManager.getTargetItemList();
         for(TargetItem item:targetItems){
             if(item.getCurrentWeek()==1) continue;

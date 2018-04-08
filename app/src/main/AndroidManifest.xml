@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.superscholar.android"
-    android:versionCode="1"
-    android:versionName="1.0.0">
+          package="com.superscholar.android"
+          android:versionCode="1"
+          android:versionName="1.0.0">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.GET_TASKS" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
-    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.GET_TASKS"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
 
     <application
         android:name="org.litepal.LitePalApplication"
@@ -26,34 +26,34 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="vnfqxL6D4m8z1FKVkwWaH3hNMk0I1c2G" />
+            android:value="vnfqxL6D4m8z1FKVkwWaH3hNMk0I1c2G"/>
 
         <activity android:name=".activity.LoginActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".activity.MainActivity"
-            android:launchMode="singleTask" />
-        <activity android:name=".activity.RegisterActivity" />
-        <activity android:name=".activity.ResetPasswordActivity" />
-        <activity android:name=".activity.MemoActivity" />
-        <activity android:name=".activity.MemoCreateActivity" />
-        <activity android:name=".activity.ImageViewActivity" />
-        <activity android:name=".activity.SettingActivity" />
-        <activity android:name=".activity.AboutActivity" />
-        <activity android:name=".activity.FeedbackActivity" />
-        <activity android:name=".activity.QuestionActivity" />
-        <activity android:name=".activity.ConcentrationRuleActivity" />
-        <activity android:name=".activity.WebActivity" />
-        <activity android:name=".activity.RobotActivity" />
-        <activity android:name=".activity.TargetDetailActivity" />
-        <activity android:name=".activity.TargetCreateActivity" />
-        <activity android:name=".activity.TargetUpdateActivity" />
-        <activity android:name=".activity.TargetHelpActivity" />
+            android:launchMode="singleTask"/>
+        <activity android:name=".activity.RegisterActivity"/>
+        <activity android:name=".activity.ResetPasswordActivity"/>
+        <activity android:name=".activity.MemoActivity"/>
+        <activity android:name=".activity.MemoCreateActivity"/>
+        <activity android:name=".activity.ImageViewActivity"/>
+        <activity android:name=".activity.SettingActivity"/>
+        <activity android:name=".activity.AboutActivity"/>
+        <activity android:name=".activity.FeedbackActivity"/>
+        <activity android:name=".activity.QuestionActivity"/>
+        <activity android:name=".activity.ConcentrationRuleActivity"/>
+        <activity android:name=".activity.WebActivity"/>
+        <activity android:name=".activity.RobotActivity"/>
+        <activity android:name=".activity.TargetDetailActivity"/>
+        <activity android:name=".activity.TargetCreateActivity"/>
+        <activity android:name=".activity.TargetUpdateActivity"/>
+        <activity android:name=".activity.TargetHelpActivity"/>
         <activity
             android:name="com.mob.tools.MobUIShell"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -63,46 +63,50 @@
 
             <!-- QQ和QQ空间分享 QQ登录的回调必须要配置的 -->
             <intent-filter>
-                <data android:scheme="tencent1106004439" />
+                <data android:scheme="tencent1106004439"/>
 
-                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.VIEW"/>
 
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
 
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
-            android:process=":remote" />
+            android:process=":remote"/>
         <service
             android:name=".service.ConcentrationService"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true"/>
         <service
             android:name=".service.ApkDownloadService"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true"/>
         <service
             android:name=".service.TargetRemindService"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="true"/>
 
-        <activity android:name=".activity.StoreActivity" />
-        <activity android:name=".activity.GoodsCreateActivity" />
-        <activity android:name=".activity.GoodsUpdateActivity" />
-        <activity android:name=".activity.GoodsConsumptionDetailActivity" />
-        <activity android:name=".activity.TimeAxisActivity" />
-        <activity android:name=".activity.EventChartActivity" />
-        <activity android:name=".activity.EventHelpActivity" />
-        <activity android:name=".activity.PersonalInfoActivity" />
-        <activity android:name=".activity.BindSidActivity" />
-        <activity android:name=".activity.BindPhoneActivity" />
-        <activity android:name=".activity.ForgetPasswordActivity" />
-        <activity android:name=".activity.ForgetSetPasswordActivity" />
-        <activity android:name=".activity.ScoreActivity" />
-        <activity android:name=".activity.ClassroomActivity"></activity>
+        <activity android:name=".activity.StoreActivity"/>
+        <activity android:name=".activity.GoodsCreateActivity"/>
+        <activity android:name=".activity.GoodsUpdateActivity"/>
+        <activity android:name=".activity.GoodsConsumptionDetailActivity"/>
+        <activity android:name=".activity.TimeAxisActivity"/>
+        <activity android:name=".activity.EventChartActivity"/>
+        <activity android:name=".activity.EventHelpActivity"/>
+        <activity android:name=".activity.PersonalInfoActivity"/>
+        <activity android:name=".activity.BindSidActivity"/>
+        <activity android:name=".activity.BindPhoneActivity"/>
+        <activity android:name=".activity.ForgetPasswordActivity"/>
+        <activity android:name=".activity.ForgetSetPasswordActivity"/>
+        <activity android:name=".activity.ScoreActivity"/>
+        <activity android:name=".activity.ClassroomActivity"/>
+        <activity android:name=".activity.TimetableActivity">
+        </activity>
+        <activity android:name=".activity.CreditDetailActivity">
+        </activity>
     </application>
 
 </manifest>

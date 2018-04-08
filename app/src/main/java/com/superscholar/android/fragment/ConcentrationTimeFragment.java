@@ -24,7 +24,9 @@ import com.superscholar.android.control.BaseActivity;
 import com.superscholar.android.entity.User;
 import com.superscholar.android.service.ConcentrationService;
 import com.superscholar.android.activity.ConcentrationRuleActivity;
+import com.superscholar.android.tools.CreditDir;
 import com.superscholar.android.tools.EncryptionDevice;
+import com.superscholar.android.tools.ServerConnector;
 import com.superscholar.android.tools.UserLib;
 
 import static android.content.Context.BIND_AUTO_CREATE;
@@ -56,10 +58,11 @@ public class ConcentrationTimeFragment extends Fragment{
                         isTimeStart=false;
                         BaseActivity.stopEnterBackgroundListening();
                         errorText.setTextColor(Color.parseColor("#1C86EE"));
-                        errorText.setText("本次专心时间已满120分钟，计时结束，获得"+String.valueOf(70)+"学分绩");
+                        errorText.setText("本次专心时间已满120分钟，计时结束，获得" + CreditDir.ConcentrationTime.RETURN_HIGHEST + "学分绩");
                         obtainCurrency(4);
-                        // TODO: 2017/6/24
-                        //学分绩变化
+                        UserLib.getInstance().getUser().gradeChange(CreditDir.ConcentrationTime.RETURN_HIGHEST);
+                        ServerConnector.getInstance().sendGradeChange(UserLib.getInstance().getUser().getUsername(),
+                                CreditDir.ConcentrationTime.RETURN_HIGHEST, "专心时间返还");
                         errorText.setVisibility(View.VISIBLE);
                     }
                 }
@@ -102,6 +105,9 @@ public class ConcentrationTimeFragment extends Fragment{
                     Intent intent=new Intent(getActivity(),ConcentrationService.class);
                     getActivity().startService(intent);
                     Toast.makeText(getActivity(),"计时开始",Toast.LENGTH_SHORT).show();
+                    ServerConnector.getInstance().sendGradeChange(UserLib.getInstance().getUser().getUsername(),
+                            CreditDir.ConcentrationTime.MORTGAGE, "专心时间预扣除");
+                    UserLib.getInstance().getUser().gradeChange(CreditDir.ConcentrationTime.MORTGAGE);
                 }
             }
         });
@@ -120,17 +126,17 @@ public class ConcentrationTimeFragment extends Fragment{
                                     isTimeStart=false;
                                     binder.stopConcentrationService();
                                     BaseActivity.stopEnterBackgroundListening();
-
-                                    Toast.makeText(getActivity(),"计时停止，本次专心时间"+String.valueOf(concentrationMin)+"分钟，获得"+String.valueOf(0)+"学分绩",Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getActivity(),"计时停止，本次专心时间"+
+                                            String.valueOf(concentrationMin)+"分钟，获得0学分绩",Toast.LENGTH_SHORT).show();
                                 }
                             }).show();
                 } else {
-                    int obtainGrade=55;
+                    double obtainGrade=CreditDir.ConcentrationTime.RETURN_LOW;
                     if(concentrationMin>=90) {
-                        obtainGrade=65;
+                        obtainGrade=CreditDir.ConcentrationTime.RETURN_HIGH;
                         obtainCurrency(3);
                     } else if(concentrationMin>=60) {
-                        obtainGrade=60;
+                        obtainGrade=CreditDir.ConcentrationTime.RETURN_MIDDLE;
                         obtainCurrency(2);
                     }else{
                         obtainCurrency(1);
@@ -138,7 +144,11 @@ public class ConcentrationTimeFragment extends Fragment{
                     isTimeStart=false;
                     binder.stopConcentrationService();
                     BaseActivity.stopEnterBackgroundListening();
-                    Toast.makeText(getActivity(),"计时停止，本次专心时间"+String.valueOf(concentrationMin)+"分钟，获得"+String.valueOf(obtainGrade)+"学分绩",Toast.LENGTH_SHORT).show();
+                    ServerConnector.getInstance().sendGradeChange(UserLib.getInstance().getUser().getUsername(),
+                            obtainGrade, "专心时间返还");
+                    UserLib.getInstance().getUser().gradeChange(obtainGrade);
+                    Toast.makeText(getActivity(),"计时停止，本次专心时间"+String.valueOf(concentrationMin)+"分钟，获得"
+                            +String.valueOf(obtainGrade)+"学分绩",Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -177,19 +187,20 @@ public class ConcentrationTimeFragment extends Fragment{
                 binder.stopConcentrationService();
                 isTimeStart=false;
                 errorText.setTextColor(Color.parseColor("#FF0000"));
-                int obtainGrade=0;
-                if(concentrationMin>=90){
-                    obtainGrade=65;
+                double obtainGrade=0;
+                if(concentrationMin>=90) {
+                    obtainGrade=CreditDir.ConcentrationTime.RETURN_HIGH;
                     obtainCurrency(3);
-                }
-                else if(concentrationMin>=60) {
-                    obtainGrade=60;
+                } else if(concentrationMin>=60) {
+                    obtainGrade=CreditDir.ConcentrationTime.RETURN_MIDDLE;
                     obtainCurrency(2);
-                }
-                else if(concentrationMin>=30) {
-                    obtainGrade=55;
+                }else{
+                    obtainGrade=CreditDir.ConcentrationTime.RETURN_LOW;
                     obtainCurrency(1);
                 }
+                ServerConnector.getInstance().sendGradeChange(UserLib.getInstance().getUser().getUsername(),
+                        obtainGrade, "专心时间返还");
+                UserLib.getInstance().getUser().gradeChange(obtainGrade);
                 errorText.setText("软件进入后台，计时停止，专心时间"+String.valueOf(concentrationMin)+
                         "分钟，获得"+String.valueOf(obtainGrade)+"学分绩");
                 errorText.setVisibility(View.VISIBLE);
@@ -216,6 +227,7 @@ public class ConcentrationTimeFragment extends Fragment{
         editor.apply();
     }
 
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.event_concentration,container,false);
         initControl(view);
@@ -245,7 +257,9 @@ public class ConcentrationTimeFragment extends Fragment{
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(binder.isTimingRefreshStart()) binder.stopConcentrationService();
+        if(binder.isTimingRefreshStart()){
+            binder.stopConcentrationService();
+        }
         getActivity().unbindService(serviceConnection);
     }
 }

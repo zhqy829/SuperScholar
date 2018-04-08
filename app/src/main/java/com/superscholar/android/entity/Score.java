@@ -1,10 +1,13 @@
 package com.superscholar.android.entity;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by zhqy on 2017/9/17.
  */
 
 public class Score {
+    @SerializedName("courseName")
     private String name;
     private String credit;
     private String score;

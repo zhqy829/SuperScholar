@@ -23,6 +23,7 @@ public class ConcentrationSettingDialogFragment extends DialogFragment{
 
     private EditText editText;
 
+    @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         View view= LayoutInflater.from(getActivity()).inflate(R.layout.dialog_concentration_setting,null);
         int currentCurrencyBase=getArguments().getInt("currencyBase",0);

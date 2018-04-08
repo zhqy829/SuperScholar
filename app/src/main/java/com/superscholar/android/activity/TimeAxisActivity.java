@@ -47,7 +47,7 @@ public class TimeAxisActivity extends BaseActivity implements View.OnClickListen
     private void initRecyclerView(){
         recyclerView=(RecyclerView)findViewById(R.id.time_axis_recycler_view);
         hintText=(TextView)findViewById(R.id.time_axis_hint);
-        manager=new EventBaseManager(this);
+        manager=new EventBaseManager(getApplicationContext());
 
         List<EventItem> events=manager.getItemsByDate(week[pos].toString());
         if(events.size()==0){

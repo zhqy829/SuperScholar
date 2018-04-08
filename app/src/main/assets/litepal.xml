@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <litepal>
-    <dbname value="Memo"  ></dbname>
-    <version value="1"></version>
+    <dbname value="SuperScholar_Litepal"/>
+    <version value="1"/>
 
     <list>
-        <mapping class="com.superscholar.android.entity.MemoItem"></mapping>
+        <mapping class="com.superscholar.android.entity.MemoItem"/>
+        <mapping class="com.superscholar.android.entity.StorableSubjectBean"/>
     </list>
 
 </litepal>

@@ -112,7 +112,7 @@ public class TargetFragment extends Fragment{
 
     //初始化目标数据
     private void initTargetBaseManager(){
-        targetBaseManager=new TargetBaseManager(getActivity());
+        targetBaseManager=new TargetBaseManager(getActivity().getApplicationContext());
         targetList=targetBaseManager.getTargetItemList();
 
         if(targetList.isEmpty()){

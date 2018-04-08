@@ -52,12 +52,11 @@ public class GoodsConsumptionDetailActivity extends BaseActivity {
         }
     }
 
-    //初始化测试数据
     private void initConsumptionData(){
         hintText=(TextView)findViewById(R.id.goods_consumption_detail_hintText);
         recyclerView=(SwipeMenuRecyclerView)findViewById(R.id.goods_consumption_detail_recyclerView);
 
-        manager=new GoodsBaseManager(this);
+        manager=new GoodsBaseManager(getApplicationContext());
         detailList=manager.getConsumptionDetailList();
 
         if(detailList.size()==0){

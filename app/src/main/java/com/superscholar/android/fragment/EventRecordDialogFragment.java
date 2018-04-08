@@ -65,7 +65,7 @@ public class EventRecordDialogFragment extends DialogFragment {
                         Time startTime=arguements.getParcelable("startTime");
                         Time endTime=arguements.getParcelable("endTime");
 
-                        EventBaseManager manager=new EventBaseManager(getActivity());
+                        EventBaseManager manager=new EventBaseManager(getActivity().getApplicationContext());
 
                         Date date=(Date)startDate.clone();
                         while(!date.isEquals(endDate)){

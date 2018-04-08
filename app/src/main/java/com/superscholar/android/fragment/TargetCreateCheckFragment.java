@@ -24,6 +24,7 @@ import com.superscholar.android.entity.TargetItem;
 import java.util.Calendar;
 
 import static android.app.Activity.RESULT_OK;
+import static com.superscholar.android.tools.CreditDir.Target.GRADE_PER_DAY;
 
 /**
  * Created by zhqy on 2017/6/24.
@@ -96,7 +97,7 @@ public class TargetCreateCheckFragment extends Fragment {
                 }else{
                     int week=Integer.parseInt(weekString);
                     int times=Integer.parseInt(timesString);
-                    int grade=2*week*times;
+                    int grade=(int)GRADE_PER_DAY*week*times;
                     hintText.setText("目标达成后您将获得"+grade+"学分绩");
                 }
             }

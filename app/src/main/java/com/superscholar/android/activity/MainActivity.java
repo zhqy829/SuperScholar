@@ -41,6 +41,7 @@ import com.superscholar.android.fragment.TargetFragment;
 import com.superscholar.android.control.BaseActivity;
 import com.superscholar.android.R;
 
+import com.superscholar.android.tools.CreditDir;
 import com.superscholar.android.tools.Date;
 import com.superscholar.android.tools.ServerConnector;
 import com.superscholar.android.tools.UserLib;
@@ -170,6 +171,8 @@ public class MainActivity extends BaseActivity {
                         startActivityForResult(intent_0,REQUEST_PERSONAL_INFO);
                         break;
                     case 1:
+                        Intent intent_1 = new Intent(MainActivity.this, CreditDetailActivity.class);
+                        startActivity(intent_1);
                         break;
                     case 2:
                         Intent intent_2=new Intent(MainActivity.this,SettingActivity.class);
@@ -422,6 +425,18 @@ public class MainActivity extends BaseActivity {
             this.usernameText.setText("用户名："+user.getUsername());
             this.phoneText.setText("手机号："+user.getPhone());
             this.gradeText.setText("学分绩：" + String.valueOf(user.getGrade()));
+            double grade = user.getGrade();
+            if(grade <= CreditDir.LEVEL_LOWEST){
+                gradeText.setText("头衔：懵懂学渣");
+            } else if(grade <= CreditDir.LEVEL_LOWER) {
+                gradeText.setText("头衔：正式学生");
+            } else if(grade <= CreditDir.LEVEL_MEDIUM) {
+                gradeText.setText("头衔：未来学霸");
+            } else if(grade <= CreditDir.LEVEL_HIGHER) {
+                gradeText.setText("头衔：知行学者");
+            } else {
+                gradeText.setText("头衔：不见学神");
+            }
             if (user.getSid()==null) {
                 this.sidText.setText("学号：" + "未绑定");
             } else {

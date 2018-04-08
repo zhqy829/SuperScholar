@@ -1,6 +1,9 @@
 package com.superscholar.android.tools;
 
+import android.util.Log;
+
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -9,6 +12,7 @@ import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+import okhttp3.Response;
 import okio.BufferedSink;
 
 /**
@@ -25,7 +29,7 @@ public class ServerConnector {
     private final String appKey="2621e4d99e99494faa04018d9a2e9cbd";  //图灵
 
     //服务器地址
-    private final String host = "http://123.207.144.29:8082/";
+    private final String host = "http://211.87.178.170:8082/";
 
     //其他操作
     private final String site_icon="img/logo.png";  //logo图片
@@ -53,6 +57,7 @@ public class ServerConnector {
     private final String action_remind="user/remind";  //设置用户提醒
     private final String action_query_score="stu/grade;";  //查询成绩
     private final String action_query_classroom="stu/classroom;";  //查询成绩
+    private final String action_query_timetable="stu/course;";
 
     private static ServerConnector sConnector=new ServerConnector();
 
@@ -64,7 +69,11 @@ public class ServerConnector {
     private OkHttpClient client;
 
     private ServerConnector(){
-        client=new OkHttpClient();
+        client=new OkHttpClient.Builder()
+                .connectTimeout(30, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .writeTimeout(30,TimeUnit.SECONDS)
+                .build();
     }
 
     //获取icon的url路径
@@ -153,15 +162,27 @@ public class ServerConnector {
     }
 
     //学分绩变化 POST
-    public void sendGradeChange(String username, double gradeChange,
-                                       String detail, Callback callback){
-        RequestBody requestBody=new FormBody.Builder()
+    public void sendGradeChange(String username, double gradeChange, String detail){
+        RequestBody requestBody = new FormBody.Builder()
                 .add("username",username)
-                .add("change",String.valueOf(gradeChange))
+                .add("changes",String.valueOf(gradeChange))
                 .add("detail",detail)
                 .build();
+        Request request = new Request.Builder()
+                .url(host + action_gradeChange)
+                .post(requestBody)
+                .build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.e("SC","failure");
+            }
 
-        requestIncludeRequestBody(action_gradeChange,requestBody,callback);
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Log.e("SC", response.body().string());
+            }
+        });
     }
 
     //用户反馈 POST
@@ -255,7 +276,7 @@ public class ServerConnector {
 
     //查询成绩
     public void queryScore(String username,Callback callback){
-        String url=host+action_query_score+"?username="+username;
+        String url=host+action_query_score + "?username=" + username;
         Request request=new Request.Builder()
                 .url(url)
                 .build();
@@ -264,6 +285,14 @@ public class ServerConnector {
 
     public void queryClassroom(Callback callback){
         String url=host+action_query_classroom;
+        Request request=new Request.Builder()
+                .url(url)
+                .build();
+        client.newCall(request).enqueue(callback);
+    }
+
+    public void queryTimetable(String username, Callback callback){
+        String url=host + action_query_timetable + "?username=" + username;
         Request request=new Request.Builder()
                 .url(url)
                 .build();

@@ -23,6 +23,7 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.superscholar.android.R;
 import com.superscholar.android.activity.ClassroomActivity;
 import com.superscholar.android.activity.ScoreActivity;
+import com.superscholar.android.activity.TimetableActivity;
 import com.superscholar.android.entity.News;
 import com.superscholar.android.holder.NetworkImageHolderView;
 import com.superscholar.android.holder.NewsBannerHolderView;
@@ -102,11 +103,14 @@ public class IntegratedFragment extends Fragment{
         timetableButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*
                 if(UserLib.getInstance().getUser().getSid()==null||UserLib.getInstance().getUser().getSpwd()==null){
                     Toast.makeText(getActivity(),"您尚未绑定学号，绑定学号后该功能才可使用哦",Toast.LENGTH_SHORT).show();
                 }else{
                     Toast.makeText(getActivity(),"该功能尚未开放，敬请期待",Toast.LENGTH_SHORT).show();
                 }
+                */
+                getActivity().startActivity(new Intent(getActivity(), TimetableActivity.class));
             }
         });
     }

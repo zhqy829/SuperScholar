@@ -14,7 +14,7 @@ import com.superscholar.android.tools.ServerConnector;
 public class AboutActivity extends BaseActivity {
 
     private String []aboutMsg={
-            "版本号        "+ ServerConnector.getInstance().VERSION_NAME,
+            "版本号        "+ ServerConnector.VERSION_NAME,
             "官方QQ      *********",
             "官方微博    ******",
             "制作团队    超级无敌宇宙男神团",

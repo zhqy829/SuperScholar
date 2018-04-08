@@ -21,8 +21,11 @@ import com.superscholar.android.R;
 import com.superscholar.android.entity.TargetItem;
 import com.superscholar.android.control.BaseActivity;
 import com.superscholar.android.tools.BoundsTime;
+import com.superscholar.android.tools.CreditDir;
 import com.superscholar.android.tools.Date;
+import com.superscholar.android.tools.ServerConnector;
 import com.superscholar.android.tools.Time;
+import com.superscholar.android.tools.UserLib;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -169,15 +172,14 @@ public class TargetDetailActivity extends BaseActivity {
     //menu放弃目标项被点击事件
     private void onDeleteTargetClicked(){
         Snackbar.make(circleCalendarView,
-                "放弃目标您将不会得到任何学分绩，同时会扣除一定学分绩作为惩罚，确定放弃？",
+                "放弃目标您将不会得到任何学分绩，同时会扣除5学分绩作为惩罚，确定放弃？",
                 Snackbar.LENGTH_SHORT).setAction("确定", new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //服务器通信语句
-                // TODO: 2017/6/23
+                ServerConnector.getInstance().sendGradeChange(UserLib.getInstance().getUser().getUsername(),
+                        CreditDir.Target.PUNISH, "放弃目标惩罚");
+                UserLib.getInstance().getUser().gradeChange(CreditDir.Target.PUNISH);
                 Intent intent=new Intent();
-                //intent传递学分绩变化
-                // TODO: 2017/6/23
                 intent.putExtra("position",position);
                 setResult(RESULT_TARGETDETAIL_DELETE,intent);
                 finish();
@@ -194,12 +196,23 @@ public class TargetDetailActivity extends BaseActivity {
                 if(targetItem.isValid()){
                     Toast.makeText(TargetDetailActivity.this,"请等到截止日期后再来领取学分绩哦",Toast.LENGTH_SHORT).show();
                 }else{
-                    Toast.makeText(TargetDetailActivity.this,"恭喜你达成目标，学分绩领取成功",Toast.LENGTH_SHORT).show();
-                    //服务器通信语句
-                    // TODO: 2017/6/23
+                    int aimDay = targetItem.getLastedWeek() * targetItem.getTimesPerWeek();
+                    int signDay = targetItem.getSignDates().size();
+                    if(signDay * 1.0f / aimDay >= 0.5){
+                        double obtainGrade = signDay * CreditDir.Target.GRADE_PER_DAY;
+                        ServerConnector.getInstance().sendGradeChange(UserLib.getInstance().getUser().getUsername(),
+                                obtainGrade, "目标达成奖励");
+                        UserLib.getInstance().getUser().gradeChange(obtainGrade);
+
+                        Toast.makeText(TargetDetailActivity.this,"恭喜你达成目标，领取到" + obtainGrade + "学分绩",
+                                Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(TargetDetailActivity.this,"打卡率低于50%，本次不获得学分绩",
+                                Toast.LENGTH_SHORT).show();
+                    }
+
+
                     Intent intent=new Intent();
-                    //intent传递学分绩变化
-                    // TODO: 2017/6/23
                     intent.putExtra("position",position);
                     setResult(RESULT_TARGETDETAIL_DELETE,intent);
                     finish();

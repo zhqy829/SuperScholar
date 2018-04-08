@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/jumpToWeek"
+        android:title="查看其他周"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/setCurrentWeek"
+        android:title="设置当前周"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/getDataAgain"
+        android:title="重新获取"
+        app:showAsAction="never"/>
+
+</menu>

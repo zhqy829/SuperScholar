@@ -1,5 +1,6 @@
 package com.superscholar.android.activity;
 
+import android.app.ProgressDialog;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -14,10 +16,13 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.superscholar.android.R;
 import com.superscholar.android.adapter.ScoreAdapter;
 import com.superscholar.android.control.BaseActivity;
 import com.superscholar.android.entity.Score;
+import com.superscholar.android.entity.ServerResponse;
 import com.superscholar.android.fragment.GradeRemindDialogFragment;
 import com.superscholar.android.fragment.IntegratedFragment;
 import com.superscholar.android.tools.ServerConnector;
@@ -41,17 +46,24 @@ public class ScoreActivity extends BaseActivity {
 
     private RecyclerView recyclerView;
     private TextView hintText;
-    private List<Score>scoreList;
+    private List<Score> scoreList;
+    private TextView creditText;
 
     private void initVariable(){
         recyclerView=(RecyclerView)findViewById(R.id.score_recycler);
         LinearLayoutManager manager=new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
         hintText=(TextView)findViewById(R.id.score_hint);
+        creditText=(TextView)findViewById(R.id.score_credit_text);
     }
 
     private void initData(){
-        scoreList=new ArrayList<>();
+        scoreList = new ArrayList<>();
+        final ProgressDialog pd = new ProgressDialog(ScoreActivity.this);
+        pd.setTitle("成绩");
+        pd.setMessage("数据获取中，请稍候...");
+        pd.setCancelable(false);
+        pd.show();
         ServerConnector.getInstance().queryScore(UserLib.getInstance().getUser().getUsername(), new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -61,43 +73,42 @@ public class ScoreActivity extends BaseActivity {
                         Toast.makeText(ScoreActivity.this,"网络异常，请检查网络设置",Toast.LENGTH_SHORT).show();
                         hintText.setVisibility(View.VISIBLE);
                         recyclerView.setVisibility(View.GONE);
+                        pd.dismiss();
                     }
                 });
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                String resp=response.body().string();
-                try {
-                    JSONArray jsonArray=new JSONArray(resp);
-                    for(int i=0;i<jsonArray.length();i++){
-                        JSONObject jsonObject=jsonArray.getJSONObject(i);
-                        String name=jsonObject.getString("km");
-                        String credit=jsonObject.getString("xf");
-                        String score=jsonObject.getString("fs");
-                        Score s=new Score(name,credit,score);
-                        scoreList.add(s);
-                    }
+                String resp = response.body().string();
+                final ServerResponse<List<Score>> data = new Gson().fromJson(resp, new TypeToken<ServerResponse<List<Score>>>(){}.getType());
+                if(data.getCode() != 0){
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if(scoreList.size()==0){
+                            hintText.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.GONE);
+                            String msg = data.getMessage();
+                            Toast.makeText(ScoreActivity.this, msg, Toast.LENGTH_SHORT).show();
+                            pd.dismiss();
+                        }
+                    });
+                } else {
+                    scoreList = data.getData();
+                    final Score creditScore = scoreList.get(0);
+                    scoreList.remove(0);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(scoreList.size() == 0){
                                 hintText.setVisibility(View.VISIBLE);
                                 recyclerView.setVisibility(View.GONE);
                             }else{
-                                ScoreAdapter adapter=new ScoreAdapter(scoreList);
+                                ScoreAdapter adapter = new ScoreAdapter(scoreList);
                                 recyclerView.setAdapter(adapter);
                             }
-                        }
-                    });
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(ScoreActivity.this,"发生异常",Toast.LENGTH_SHORT).show();
-                            hintText.setVisibility(View.VISIBLE);
-                            recyclerView.setVisibility(View.GONE);
+                            creditText.setText(creditScore.getScore());
+                            pd.dismiss();
                         }
                     });
                 }

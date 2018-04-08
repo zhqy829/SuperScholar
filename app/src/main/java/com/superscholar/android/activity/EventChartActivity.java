@@ -38,7 +38,7 @@ public class EventChartActivity extends BaseActivity implements View.OnClickList
 
     //饼状图初始化
     private void initPieChart(){
-        manager=new EventBaseManager(this);
+        manager=new EventBaseManager(getApplicationContext());
 
         pieChart=(PieChart)findViewById(R.id.event_chart_pie);
         pieChart.setUsePercentValues(true);  //显示成百分比

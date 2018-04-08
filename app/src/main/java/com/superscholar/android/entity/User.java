@@ -82,4 +82,8 @@ public class User {
     public void setCurrencyAmount(int currencyAmount) {
         this.currencyAmount = currencyAmount;
     }
+
+    public void gradeChange(double change) {
+        this.grade = this.grade + change;
+    }
 }

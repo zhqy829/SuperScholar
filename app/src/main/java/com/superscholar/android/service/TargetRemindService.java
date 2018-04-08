@@ -77,7 +77,7 @@ public class TargetRemindService extends Service {
     //服务重启后目标数据初始化
     private void initDataAfterServiceRestart(){
         targetItems=new ArrayList<>();
-        TargetBaseManager manager=new TargetBaseManager(this);
+        TargetBaseManager manager=new TargetBaseManager(getApplicationContext());
         targetItems=manager.getTargetItemList();
         generateDelayTasks();
     }
@@ -129,10 +129,12 @@ public class TargetRemindService extends Service {
         }
         Intent i=new Intent(this,TargetRemindService.class);
         PendingIntent pi=PendingIntent.getService(this,0,i,0);
-        if(Build.VERSION.SDK_INT>=19) //Android 4.4
-            manager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP,triggerAtTime,pi);
-        else
-            manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,triggerAtTime,pi);
+        if(Build.VERSION.SDK_INT>=19) {
+            //Android 4.4
+            manager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAtTime, pi);
+        } else {
+            manager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAtTime, pi);
+        }
         return START_STICKY;
     }
 
